@@ -16,13 +16,24 @@ public class DefaultInitializer extends BaseInitializer {
         "lib/core/domain/entities/skeleton/model/base_model.dart",
         "lib/core/domain/entities/skeleton/repository/base_repository.dart",
         "lib/core/domain/entities/skeleton/repository/crud_repository.dart",
+        "lib/core/domain/entities/skeleton/event/base_event.dart",
+//        "lib/core/domain/entities/skeleton/event/base_entity.dart",
 
 
-        "lib/core/application/bootstrap",
+        "lib/core/application/bootstrap/di/di_bootstrap.dart",
+        "lib/core/application/bootstrap/bootstrap.dart",
+        "lib/core/application/event_listeners/entities",
+        "lib/core/application/use_cases",
 
 
         "lib/core/infrastructure/structures/collection/collection.dart",
         "lib/core/infrastructure/di/di.dart",
+        "lib/core/infrastructure/di/provider_di.dart",
+        "lib/core/infrastructure/event_dispatching/event.dart",
+        "lib/core/infrastructure/event_dispatching/event_dispatcher.dart",
+        "lib/core/infrastructure/event_dispatching/event_listener.dart",
+        "lib/core/infrastructure/event_dispatching/callback_event_listener.dart",
+        "lib/core/infrastructure/event_dispatching/one_type_events.dart",
 
         "lib/core/infrastructure/data/clients/skeleton/base_client.dart",
         "lib/core/infrastructure/data/clients/api",

@@ -14,8 +14,8 @@ public class HelpExecutor extends BaseExecutor {
     @Override
     public void exec() {
         String[] helpers = new String[]{
-                DefaultInitializer.help(),
-                HelpExecutor.help(),
+            DefaultInitializer.help(),
+            HelpExecutor.help(),
         };
 
         for(String help: helpers){
