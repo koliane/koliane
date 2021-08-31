@@ -1,6 +1,6 @@
 abstract class BaseMigration {
-  void up();
-  void down() {
+  Future up();
+  Future down() async {
 
   }
 }

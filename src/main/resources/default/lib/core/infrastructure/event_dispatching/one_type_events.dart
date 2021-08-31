@@ -1,6 +1,5 @@
-import 'package:poligon/core/infrastructure/event_dispatching/event_listener.dart';
-
-import './event.dart';
+import 'event_listener.dart';
+import 'event.dart';
 
 class OneTypeEvents<T extends EventListener>{
 

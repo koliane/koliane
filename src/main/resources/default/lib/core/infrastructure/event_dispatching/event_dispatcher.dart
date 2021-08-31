@@ -1,6 +1,6 @@
-import './event.dart';
-import './event_listener.dart';
-import './one_type_events.dart';
+import 'event.dart';
+import 'event_listener.dart';
+import 'one_type_events.dart';
 
 class EventDispatcher {
   // Ключ - тип класса события

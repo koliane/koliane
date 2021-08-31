@@ -1,4 +1,4 @@
-import './event.dart';
+import 'event.dart';
 
 
 abstract class EventListener {

@@ -1,13 +1,15 @@
-import 'dart:io';
-
-import './base_migration.dart';
-import '../sqlite_orm.dart';
 import 'package:moor_flutter/moor_flutter.dart';
+
+import 'base_migration.dart';
+import 'list/init_migration.dart';
+
 
 class DefaultMigrationStrategy implements MigrationStrategy {
 
   Map<int, List<BaseMigration>> get migrationsMap => {
+    2: [
 
+    ]
   };
 
   @override
@@ -22,6 +24,9 @@ class DefaultMigrationStrategy implements MigrationStrategy {
   OnCreate get onCreate => (Migrator migrator) async {
     print('-------------------- ON_CREATE ------------------');
     await migrator.createAll();
+    InitMigration().up();
+
+
   };
 
   @override
@@ -29,14 +34,25 @@ class DefaultMigrationStrategy implements MigrationStrategy {
     if (from >= to) {
       return;
     }
+    print('-------------------- ON_UPGRADE ------------------');
 
-    migrationsMap.forEach((version, migrations) => {
-      if(version > from && version <= to) {
-        migrations.forEach((migration) {
-          migration.up();
-        })
+
+    Iterable<MapEntry<int, List<BaseMigration>>> migrationsMapEntries = migrationsMap.entries;
+
+    for(MapEntry<int, List<BaseMigration>> migrationsMapEntry in migrationsMapEntries) {
+      int version = migrationsMapEntry.key;
+      if(version <= from || version > to) {
+        continue;
       }
-    });
+
+      List<BaseMigration> migrations = migrationsMapEntry.value;
+      int n = migrations.length;
+
+      for(int i = 0; i < n; i++) {
+        BaseMigration migration = migrations[i];
+        await migration.up();
+      }
+    }
   };
 
 }
