@@ -6,5 +6,5 @@ abstract class CrudRepository<T extends BaseModel> extends BaseRepository {
   Future<int> create(T model);
   Future<BaseCollection<T>> read();
   Future update(T model);
-  Future delete(int id);
+  Future delete(covariant dynamic key);
 }

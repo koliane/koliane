@@ -9,9 +9,7 @@ class OptionDao extends DatabaseAccessor<SqliteOrm> with _$OptionDaoMixin {
   static SqliteOrm _attachedDatabase = SqliteOrm.instance;
   OptionDao([SqliteOrm? forCompatibility]): super(_attachedDatabase);
 
-  static const need_to_show_onboarding_code = 'need_to_show_onboarding';
-
-  Future<List<OptionData>> getAllEmployee() => select(option).get();
-  Future insertOption(OptionData optionItem) => into(option).insert(optionItem);
-  Future updateOption(OptionData optionItem) => update(option).replace(optionItem);
+  Future<List<OptionData>> getAllOptions() => select(option).get();
+  Future<int> insertOption(OptionData optionItem) => into(option).insert(optionItem);
+  Future<bool> updateOption(OptionData optionItem) => update(option).replace(optionItem);
 }

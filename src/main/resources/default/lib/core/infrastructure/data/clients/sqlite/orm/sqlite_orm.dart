@@ -14,11 +14,9 @@ part 'sqlite_orm.g.dart';
 
 @UseMoor(
     tables: [
-      Example,
       Option
     ],
     daos: [
-      ExampleDao,
       OptionDao
     ]
 )
