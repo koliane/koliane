@@ -35,6 +35,6 @@ class Collection<T> extends ListBase<T>{
 
   @override
   void operator []=(int index, T value) {
-    _data[index] = value;
+    _data.insert(index, value);
   }
 }
