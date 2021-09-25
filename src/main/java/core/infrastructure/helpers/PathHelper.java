@@ -1,4 +1,6 @@
-package core.infrastructure;
+package core.infrastructure.helpers;
+
+import core.infrastructure.utils.ProgramDirectoryUtilities;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

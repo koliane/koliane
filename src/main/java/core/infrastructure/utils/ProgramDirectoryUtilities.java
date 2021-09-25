@@ -1,4 +1,4 @@
-package core.infrastructure;
+package core.infrastructure.utils;
 import core.infrastructure.config.Config;
 
 import java.nio.file.Path;

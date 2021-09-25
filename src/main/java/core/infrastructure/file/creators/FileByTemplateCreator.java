@@ -1,10 +1,10 @@
-package core.infrastructure.file_creators;
+package core.infrastructure.file.creators;
 
-import core.application.OptionsMapper;
-import core.infrastructure.PathHelper;
+import core.application.mappers.OptionsMapper;
+import core.infrastructure.helpers.PathHelper;
+import core.infrastructure.helpers.ReplacementHelper;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -93,14 +93,16 @@ public class FileByTemplateCreator {
             throw new NoSuchFileException("Нет шаблона для файла: " + relativePath.toString());
         }
 
-        String templateText = new String(Files.readAllBytes(pathToTemplateFile));
+        String templateText = new String(Files.readAllBytes(pathToTemplateFile), StandardCharsets.UTF_8);
 
         HashMap<String, String> optionsMap = optionsMapper.getMap();
         for(HashMap.Entry<String, String> pair: optionsMap.entrySet()) {
             String key = pair.getKey();
             String optionValue = pair.getValue();
 
-            templateText = templateText.replaceAll("#-"+key+"-#", optionValue);
+//            templateText = templateText.replaceAll("#-"+key+"-#", optionValue);
+            String replacementWord = ReplacementHelper.getReplacementWord(key);
+            templateText = templateText.replaceAll(replacementWord, optionValue);
         }
 
         Files.createFile(absolutePathToCreate);

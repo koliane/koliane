@@ -1,14 +1,15 @@
-package core.application;
+package core.application.mappers;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class OptionsMapper {
-    public static final String PROJECT_NAME = "PROJECT_NAME";
+public class OptionsMapper extends BaseOptionsMapper {
+//    public static final String PROJECT_NAME = "PROJECT_NAME";
+//
+//    private String projectName;
 
-    private String projectName;
-
-    public OptionsMapper(){
+    public OptionsMapper(String projectName){
+        super(projectName);
     }
 
     protected HashMap<String, String> createOptionsMap() {
@@ -18,9 +19,9 @@ public class OptionsMapper {
         return map;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
+//    public void setProjectName(String projectName) {
+//        this.projectName = projectName;
+//    }
 
 
 

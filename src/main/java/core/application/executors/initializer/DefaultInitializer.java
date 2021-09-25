@@ -1,9 +1,9 @@
 package core.application.executors.initializer;
 
-import core.application.OptionsMapper;
+import core.application.mappers.OptionsMapper;
 import core.application.commands.init_command.InitCommand;
 import core.infrastructure.config.Params;
-import core.infrastructure.file_creators.FileByTemplateCreator;
+import core.infrastructure.file.creators.FileByTemplateCreator;
 
 public class DefaultInitializer extends BaseInitializer {
     private static final String pathToPubspec = "pubspec.yaml";
@@ -24,8 +24,7 @@ public class DefaultInitializer extends BaseInitializer {
 
         "lib/core/domain/entities/option/model/bool_option.dart",
         "lib/core/domain/entities/option/model/option.dart",
-        "lib/core/domain/entities/option/port/provider/option_read_provider_port.dart",
-        "lib/core/domain/entities/option/port/provider/option_update_provider_port.dart",
+        "lib/core/domain/entities/option/port/provider/option_crud_provider_port.dart",
         "lib/core/domain/entities/option/repository/option_repository.dart",
         "lib/core/domain/entities/option/service/option_service.dart",
         "lib/core/domain/entities/option/service/options.dart",
@@ -52,6 +51,8 @@ public class DefaultInitializer extends BaseInitializer {
 
         "lib/core/infrastructure/di/di.dart",
         "lib/core/infrastructure/di/provider_di.dart",
+            
+        "lib/core/infrastructure/services/filter",
 
         "lib/core/infrastructure/event_dispatching/event.dart",
         "lib/core/infrastructure/event_dispatching/event_dispatcher.dart",
@@ -59,33 +60,32 @@ public class DefaultInitializer extends BaseInitializer {
         "lib/core/infrastructure/event_dispatching/callback_event_listener.dart",
         "lib/core/infrastructure/event_dispatching/one_type_events.dart",
 
-        "lib/core/infrastructure/data/clients/skeleton/base_client.dart",
-        "lib/core/infrastructure/data/clients/api",
-        "lib/core/infrastructure/data/clients/example",
-        "lib/core/infrastructure/data/clients/sqlite/sqlite.dart",
-        "lib/core/infrastructure/data/clients/sqlite/sqlite_client.dart",
-        "lib/core/infrastructure/data/clients/sqlite/orm/migrations/base_migration.dart",
-        "lib/core/infrastructure/data/clients/sqlite/orm/migrations/default_migration_strategy.dart",
-        "lib/core/infrastructure/data/clients/sqlite/orm/migrations/list/init_migration.dart",
-        "lib/core/infrastructure/data/clients/sqlite/orm/tables/tables.dart",
 
-        "lib/core/infrastructure/data/clients/sqlite/orm/sqlite_orm.dart",
-//        "lib/core/infrastructure/data/clients/sqlite/orm/tables/example/example.dart",
-//        "lib/core/infrastructure/data/clients/sqlite/orm/tables/example/example_dao.dart",
-        "lib/core/infrastructure/data/clients/sqlite/orm/tables/option/option.dart",
-        "lib/core/infrastructure/data/clients/sqlite/orm/tables/option/option_dao.dart",
+        "lib/core/data/clients/skeleton/base_client.dart",
+        "lib/core/data/clients/api",
+        "lib/core/data/clients/example",
+        "lib/core/data/clients/sqlite/sqlite.dart",
+        "lib/core/data/clients/sqlite/sqlite_client.dart",
+        "lib/core/data/clients/sqlite/orm/migrations/base_migration.dart",
+        "lib/core/data/clients/sqlite/orm/migrations/default_migration_strategy.dart",
+        "lib/core/data/clients/sqlite/orm/migrations/list/init_migration.dart",
+        "lib/core/data/clients/sqlite/orm/tables/tables.dart",
 
-        "lib/core/infrastructure/data/providers/entities/option/provider/sqlite/option_crud_provider.dart",
-        "lib/core/infrastructure/data/providers/skeleton/base_provider.dart",
-        "lib/core/infrastructure/data/providers/skeleton/crud_provider.dart",
-        "lib/core/infrastructure/data/providers/skeleton/dto/base_dto.dart",
-        "lib/core/infrastructure/data/providers/skeleton/dto/code_value_dto.dart",
-        "lib/core/infrastructure/data/providers/skeleton/provider/base_provider.dart",
-        "lib/core/infrastructure/data/providers/skeleton/request/base_request.dart",
-        "lib/core/infrastructure/data/providers/skeleton/request/code_request.dart",
-        "lib/core/infrastructure/data/providers/skeleton/request/code_value_request.dart",
-        "lib/core/infrastructure/data/providers/skeleton/response/base_response.dart",
-        "lib/core/infrastructure/data/providers/skeleton/response/list_response.dart",
+        "lib/core/data/clients/sqlite/orm/sqlite_orm.dart",
+        "lib/core/data/clients/sqlite/orm/tables/option/option.dart",
+        "lib/core/data/clients/sqlite/orm/tables/option/option_dao.dart",
+
+        "lib/core/data/providers/entities/option/provider/sqlite/option_crud_provider.dart",
+        "lib/core/data/providers/skeleton/base_provider.dart",
+        "lib/core/data/providers/skeleton/crud_provider.dart",
+        "lib/core/data/providers/skeleton/dto/base_dto.dart",
+        "lib/core/data/providers/skeleton/dto/code_value_dto.dart",
+        "lib/core/data/providers/skeleton/provider/base_provider.dart",
+        "lib/core/data/providers/skeleton/request/base_request.dart",
+        "lib/core/data/providers/skeleton/request/code_request.dart",
+        "lib/core/data/providers/skeleton/request/code_value_request.dart",
+        "lib/core/data/providers/skeleton/response/base_response.dart",
+        "lib/core/data/providers/skeleton/response/list_response.dart",
 
         "lib/core/infrastructure/utils/datetime",
         "lib/core/infrastructure/utils/text",
@@ -128,6 +128,7 @@ public class DefaultInitializer extends BaseInitializer {
         "lib/ui/widgets/pages/wrapper",
         "lib/ui/styles/default/color.dart",
         "lib/ui/styles/default/theme.dart",
+
 
     };
 

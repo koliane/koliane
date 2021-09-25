@@ -1,6 +1,6 @@
 package core.application.executors.initializer;
 
-import core.application.OptionsMapper;
+import core.application.mappers.OptionsMapper;
 import core.application.executors.BaseExecutor;
 
 import java.nio.file.Path;
