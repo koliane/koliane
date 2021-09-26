@@ -30,10 +30,9 @@ AB: 13-Apr-19; Replaced `type` with `dtype` to fix golang code gen.
 
 */
 
-grammar Training;
+grammar PlaceholdersDart;
 
 compilationUnit: libraryDefinition | partDeclaration;
-
 
 WHITESPACE
 //  : ('\t' | ' ' | NEWLINE)+   -> skip
@@ -88,9 +87,7 @@ functionBody
   | ('async' | 'async*' | 'sync*')? block
   ;
 block
-  : openFigureBracket statements closeFigureBracket
-//  : '{' statements '}'
-  | placeholderLiteral
+  : '{' statements '}'
   ;
 
 // 9.2 Formal Parameters
@@ -111,8 +108,7 @@ optionalPositionalFormalParameters
   : '[' defaultFormalParameter (',' defaultFormalParameter)* ','? ']'
   ;
 namedFormalParameters
-//  : '{' defaultNamedParameter (',' defaultNamedParameter)* ','? '}'
-  : openFigureBracket defaultNamedParameter (',' defaultNamedParameter)* ','? closeFigureBracket
+  : '{' defaultNamedParameter (',' defaultNamedParameter)* ','? '}'
   ;
 
 // 9.2.1 Required Formals
@@ -143,12 +139,9 @@ defaultNamedParameter
 
 // 10 Classes
 classDefinition
-  : metadata 'abstract'? 'class' className typeParameters?
-//  : metadata 'abstract'? 'class' identifier typeParameters?
-//  : metadata 'abstract'? 'class' (identifier | placeholderLiteral) typeParameters?
+  : metadata 'abstract'? 'class' identifier typeParameters?
     superclass? mixins? interfaces?
-//    '{' (metadata classMemberDefinition)* '}'
-    openFigureBracket (metadata classMemberDefinition)* closeFigureBracket
+    '{' (metadata classMemberDefinition)* '}'
   | metadata 'abstract'? 'class' mixinApplicationClass
 ;
 mixins
@@ -157,7 +150,6 @@ mixins
 classMemberDefinition
   : declaration ';'
   | methodSignature functionBody
-  | placeholderLiteral
   ;
 methodSignature
   : constructorSignature initializers?
@@ -181,7 +173,6 @@ declaration
   | 'static' ('final' | 'const') dtype? staticFinalDeclarationList
   | 'final' dtype? initializedIdentifierList
   | ('static' | 'covariant')? ('var' | dtype) initializedIdentifierList
-//  | placeholderLiteral
   ;
 
 staticFinalDeclarationList
@@ -264,8 +255,7 @@ mixinApplication
 // 13 Enums
 enumType
   : metadata 'enum' identifier
-//    '{' enumEntry (',' enumEntry)* ','? '}'
-    openFigureBracket enumEntry (',' enumEntry)* ','? closeFigureBracket
+    '{' enumEntry (',' enumEntry)* ','? '}'
   ;
 
 enumEntry
@@ -290,7 +280,6 @@ expression
   : assignableExpression assignmentOperator expression
   | conditionalExpression cascadeSection*
   | throwExpression
-  | placeholderLiteral
   ;
 expressionWithoutCascade
   : assignableExpression assignmentOperator expressionWithoutCascade
@@ -421,12 +410,10 @@ listLiteral
 // 16.8 Maps
 mapLiteral
   : 'const'? typeArguments?
-//    '{' (mapLiteralEntry (',' mapLiteralEntry)* ','?)? '}'
-    openFigureBracket (mapLiteralEntry (',' mapLiteralEntry)* ','?)? closeFigureBracket
+    '{' (mapLiteralEntry (',' mapLiteralEntry)* ','?)? '}'
 ;
 mapLiteralEntry
   : expression ':' expression
-  | placeholderLiteral
   ;
 
 // 16.9 Throw
@@ -656,7 +643,6 @@ assignableSelector
 
 identifier
   : IDENTIFIER
-//  | PlaceholderString
   ;
 qualified
   : identifier ('.' identifier)?
@@ -746,8 +732,7 @@ doStatement
   ;
 // 17.9 Switch
 switchStatement
-//  : 'switch'  '(' expression ')' '{' switchCase* defaultCase? '}'
-  : 'switch'  '(' expression ')' openFigureBracket switchCase* defaultCase? closeFigureBracket
+  : 'switch'  '(' expression ')' '{' switchCase* defaultCase? '}'
   ;
 switchCase
   : label* 'case' expression ':' statements
@@ -995,6 +980,13 @@ fragment
 DIGIT
   : [0-9]
   ;
+
+placeholderLiteral: PlaceholderString;
+
+PlaceholderString
+  : '#-' StringContentDQ*? '-#'
+  ;
+
 // 20.1.2 Comments
 SINGLE_LINE_COMMENT
 //  : '//' ~(NEWLINE)* (NEWLINE)? // Origin Syntax
@@ -1005,19 +997,3 @@ MULTI_LINE_COMMENT
   : '/*' .*? '*/' -> skip
   ;
 
-placeholderLiteral: PlaceholderString;
-stringWithPlaceholderLiteral: StringWithPlaceholder;
-
-PlaceholderString
-  : '#-' StringContentDQ*? '-#'
-  ;
-
-StringWithPlaceholder: [a-zA-Z0-9]* PlaceholderString [a-zA-Z0-9]*;
-
-OPEN_FIGURE_BRACKET: '{';
-CLOSE_FIGURE_BRACKET: '}';
-
-openFigureBracket: OPEN_FIGURE_BRACKET;
-closeFigureBracket: CLOSE_FIGURE_BRACKET;
-
-className: identifier | placeholderLiteral | stringWithPlaceholderLiteral;

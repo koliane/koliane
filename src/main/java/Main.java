@@ -1,18 +1,153 @@
-import core.application.CommandRequest;
-import core.application.OptionsMapper;
-import core.application.PubspecYaml;
-import core.application.commands.Command;
-import core.application.commands.help_command.HelpCommand;
-import core.application.commands.init_command.InitCommand;
-import core.application.executors.help.HelpExecutor;
-import core.application.executors.initializer.DefaultInitializer;
+import antlr.training.TrainingLexer;
+import antlr.training.TrainingParser;
+import antlr.training.ReaderWalker;
+import antlr.training.WriterWalker;
+import core.application.mappers.AddEntityOptionsMapper;
+import core.infrastructure.antlr.contexts.*;
+import core.infrastructure.file.changers.FileByTemplateChanger;
+import core.infrastructure.helpers.PathHelper;
+import core.infrastructure.helpers.ReplacementHelper;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+
+//long m = System.currentTimeMillis();
+//System.out.println( (System.currentTimeMillis() - m));
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
+        ReplacementHelper.getBeforePlaceholderText("Q#-uii-#zz0");
+        ReplacementHelper.getAfterPlaceholderText("Q#-uii-#zz0");
+
+        /*
+        Path relativePath = Paths.get("test.dart");
+        Path templateDirectory = PathHelper.getDefaultTemplateDirectory();
+        Path pathToTemplateFile = templateDirectory.resolve(relativePath);
+        File templateFile = pathToTemplateFile.toFile();
+
+        if(!templateFile.exists()) {
+            throw new NoSuchFileException("Нет шаблона для файла: " + relativePath.toString());
+        }
+
+        String templateText = new String(Files.readAllBytes(pathToTemplateFile), StandardCharsets.UTF_8);
+
+
+
+        /////////////
+        Path resultRelativePath = Paths.get("test2.dart");
+        Path pathToResultFile = templateDirectory.resolve(resultRelativePath);
+        File resultFile = pathToTemplateFile.toFile();
+        if(!templateFile.exists()) {
+            throw new NoSuchFileException("Нет файла для вывода результата: " + resultRelativePath.toString());
+        }
+        String resultText = new String(Files.readAllBytes(pathToResultFile), StandardCharsets.UTF_8);
+        /////////////
+
+
+//        System.out.println(templateText);
+        System.out.println("-----------------------------------------------------------");
+
+        TrainingLexer lexer = new TrainingLexer(CharStreams.fromString(templateText));
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        TrainingParser parser = new TrainingParser(tokens);
+        ParseTree tree = parser.compilationUnit();
+        ParseTreeWalker walker = new ParseTreeWalker();
+        ReaderWalker templateVisitor = new ReaderWalker();
+        walker.walk(templateVisitor, tree);
+
+        PlaceholdersContextsStorage placeholdersContextsStorage = templateVisitor.getContextsStorage();
+
+        ////////////////////////
+        TrainingLexer resultLexer = new TrainingLexer(CharStreams.fromString(resultText));
+        CommonTokenStream resultTokens = new CommonTokenStream(resultLexer);
+        TrainingParser resultParser = new TrainingParser(resultTokens);
+        ParseTree resultTree = resultParser.compilationUnit();
+        ParseTreeWalker resultWalker = new ParseTreeWalker();
+        WriterWalker resultVisitor = new WriterWalker(placeholdersContextsStorage);
+        resultWalker.walk(resultVisitor, resultTree);
+
+        ReleaseContextsStorage resultContextsStorage = resultVisitor.getContextsStorage();
+        HashMap<String, String> placeholdersMap = new HashMap<>();
+        placeholdersMap.put("FUNC_MOUNT_POINT", "print('zzz');");
+        ////////////////////////
+
+
+        ArrayList<PlaceholderContext> contexts = placeholdersContextsStorage.getContexts();
+        PlaceholderContext firstContext = contexts.get(0);
+        System.out.println("Main");
+//        System.out.println(contexts.size());
+
+//        ArrayList<Context> descendants = firstContext.getDescendants();
+//        ArrayList<Context> nestedContexts = firstContext.getNestedContexts();
+//        System.out.println(descendants.size());
+//        System.out.println(nestedContexts.size());
+
+
+//        System.out.println("template ids= "+firstContext.getNestedRulesIds());
+        System.out.println("all template ids= "+firstContext.getAllContextsRulesIds());
+
+        //////////////////////////////////
+        ArrayList<ReleaseContext> releaseContexts = resultContextsStorage.getContexts();
+
+        StringBuilder stringBuilder = new StringBuilder(resultText);
+        for(ReleaseContext releaseContext: releaseContexts) {
+            stringBuilder.insert(releaseContext.getParserRuleContext().getStart().getStartIndex()+1, "hello");
+            System.out.println(stringBuilder.toString());
+            System.out.println("all result ids= "+releaseContext.getAllContextsRulesIds());
+        }
+
+
+
+//        resultText.code
+//        Context firstResultContext = resultContexts.get(0);
+//        Context firstResultContext = resultVisitor.getCurrentContext();
+//        System.out.println("result ids= "+firstResultContext.getNestedRulesIds());
+        //////////////////////////////////
+*/
+
+
+
+
+
+
+
+
+
+        String strPathToFile = "D:/projects/java/koliane/src/main/resources/default/test.dart";
+//        String strPathToOutputFile = "D:/projects/java/koliane/src/main/resources/test2.dart";
+//
+        Path pathToTemplateFile = Paths.get(strPathToFile).toAbsolutePath();
+
+        Path relativePath = Paths.get("test.dart");
+//        Path pathToProject = Paths.get(Config.PATH_TO_PROGRAM_TEST_PROJECT);
+        Path pathToProject = Paths.get("D:/projects/java/koliane/src/main/resources");
+
+//        OptionsMapper optionsMapper = new OptionsMapper();
+        AddEntityOptionsMapper optionsMapper = new AddEntityOptionsMapper("asdf", "Auth");
+//        System.out.println(optionsMapper.getMap(pathToTemplateFile));
+
+        FileByTemplateChanger fileByTemplateChanger = new FileByTemplateChanger(pathToProject, optionsMapper);
+        fileByTemplateChanger.change("test.dart");
+
+
+
+return;
+
+
+/*
         try {
 
 
@@ -24,10 +159,10 @@ public class Main {
 //            Command command = new InitCommand(Paths.get(Config.PATH_TO_PROGRAM_TEST_PROJECT));
 //            Command command = new HelpCommand();
 
-//            for (int i = 0; i < args.length; i++){
-//                String arg = args[i];
-//                System.out.println(String.format("Argument %d: %s", i, arg));
-//            }
+            for (int i = 0; i < args.length; i++){
+                String arg = args[i];
+                System.out.println(String.format("Argument %d: %s", i, arg));
+            }
 
             if(command instanceof InitCommand) {
                 Path projectDirectoryPath = command.getPathToProject();
@@ -46,6 +181,6 @@ public class Main {
             System.out.println("Скрипт прерван");
         }
 
-
+*/
     }
 }

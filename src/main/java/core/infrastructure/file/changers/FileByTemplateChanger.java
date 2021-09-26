@@ -111,17 +111,18 @@ public class FileByTemplateChanger {
 
         int insertFromIndex = 0;
 
+//        System.out.println("qqqq");
+//        System.out.println(releaseContextsStorage.getContexts().size());
         for(ReleaseContext releaseContext: releaseContextsStorage.getContexts()) {
             PlaceholderContext placeholderContext = releaseContext.getPlaceholderContext();
             String placeholderOffset = getPlaceholderOffset(templateText, placeholderContext);
             String placeholderLineOffset = getPlaceholderLineOffset(templateText, placeholderContext);
             String replacementText = chunksMap.get(placeholderContext.getName());
+            System.out.println(placeholderContext.getName());
             replacementText = buildReplacementText(replacementText, placeholderOffset, placeholderLineOffset);
 
-//            Token releaseStartToken = releaseContext.getParserRuleContext().getStart();
-//            int insertToIndex = releaseStartToken.getStopIndex()+1;
             int insertToIndex = getIndexToInsert(releaseContext);
-            System.out.println(insertToIndex);
+//            System.out.println(insertToIndex);
             String releaseTextChunk = releaseText.substring(insertFromIndex, insertToIndex);
             releaseTextsChunks.add(releaseTextChunk);
             releaseTextsChunks.add(replacementText);
@@ -158,6 +159,7 @@ public class FileByTemplateChanger {
     }
 
     private String buildReplacementText(String replacementText, String placeholderOffset, String placeholderLineOffset) {
+//        System.out.println("replacementText ="+replacementText);
         if(placeholderLineOffset.length() > 0) {
             Pattern pattern = Pattern.compile("\n");
             Matcher matcher = pattern.matcher(replacementText);
@@ -230,7 +232,7 @@ public class FileByTemplateChanger {
         while (matcher.find()){
             String placeholder = templateText.substring(matcher.start(), matcher.end());
             String clearedPlaceholder = ReplacementHelper.getClearedPlaceholder(placeholder);
-            if(chunksKeys.contains(clearedPlaceholder)) {
+            if(chunksKeys.contains(clearedPlaceholder) && !existsPlaceholders.contains(clearedPlaceholder)) {
                 existsPlaceholders.add(clearedPlaceholder);
             }
         }

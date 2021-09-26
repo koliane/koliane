@@ -46,7 +46,21 @@ public abstract class BaseWalker<S, C> extends TrainingBaseListener{
     protected boolean isContextRule(ParserRuleContext ctx) {
         int ruleIndex = ctx.getRuleIndex();
 
-        return getAvailableContextRules().contains(ruleIndex);
+        if(!getAvailableContextRules().contains(ruleIndex)) {
+            return false;
+        }
+        if(ruleIndex == TrainingParser.RULE_placeholderLiteral) {
+
+//            int[] availableParentRules = {TrainingParser.RULE_classDefinition, TrainingParser.RULE_className};
+//            if({TrainingParser.RULE_classDefinition}.co) {
+//            if(ctx.getParent().getRuleIndex() == TrainingParser.RULE_classDefinition) {
+            if(ctx.getParent().getRuleIndex() == TrainingParser.RULE_className) {
+                return false;
+            }
+        }
+
+        return true;
+//        return getAvailableContextRules().contains(ruleIndex);
     }
 
     protected String getFullText(ParserRuleContext ctx) {

@@ -9,7 +9,8 @@ public class PlaceholdersContextsStorage extends ContextsStorage<PlaceholderCont
     public void initPlaceholderRuleIdsMap() {
         for (Context context: contexts) {
             PlaceholderContext placeholderContext = (PlaceholderContext)context;
-            placeholderRuleIdsMap.put(placeholderContext.getName(), placeholderContext.getNestedRulesIds());
+//            placeholderRuleIdsMap.put(placeholderContext.getName(), placeholderContext.getNestedRulesIds());
+            placeholderRuleIdsMap.put(placeholderContext.getName(), placeholderContext.getAllContextsRulesIds());
         }
     }
 

@@ -11,7 +11,6 @@ public class Context {
     protected ArrayList<Context> children;
     protected ArrayList<Context> beforeContexts;
     protected ArrayList<Context> afterContexts;
-    protected ArrayList<Context> nestingContexts;
 
     protected int ruleId;
     protected ArrayList<Integer> allRuleIds;
@@ -20,7 +19,7 @@ public class Context {
     public Context() {
         beforeContexts = new ArrayList<Context>();
         afterContexts = new ArrayList<Context>();
-        nestingContexts = new ArrayList<Context>();
+//        nestingContexts = new ArrayList<Context>();
         children = new ArrayList<Context>();
     }
 
@@ -58,17 +57,17 @@ public class Context {
         children.add(child);
     }
 
-    public ArrayList<Context> getNestedContexts() {
-        ArrayList<Context> contexts = new ArrayList<>();
-        if(parent == null) {
-            return contexts;
-        }
-
-        contexts.add(parent);
-        contexts.addAll(parent.getNestedContexts());
-
-        return contexts;
-    }
+//    public ArrayList<Context> getNestedContexts() {
+//        ArrayList<Context> contexts = new ArrayList<>();
+//        if(parent == null) {
+//            return contexts;
+//        }
+//
+//        contexts.add(parent);
+//        contexts.addAll(parent.getNestedContexts());
+//
+//        return contexts;
+//    }
 
     public ArrayList<Context> getAllContexts() {
         ArrayList<Context> contexts = new ArrayList<>();
@@ -79,6 +78,7 @@ public class Context {
         }
 
         contexts.addAll(parent.getAllContexts());
+
 
         return contexts;
     }
@@ -99,28 +99,6 @@ public class Context {
         }
 
         return rulesIds;
-    }
-
-    public ArrayList<Integer> getNestedRulesIds() {
-        ArrayList<Context> contexts = getNestedContexts();
-        Collections.reverse(contexts);
-
-        ArrayList<Integer> rulesIds = new ArrayList<>();
-
-        for (Context context: contexts) {
-            ParserRuleContext ruleContext = context.getParserRuleContext();
-            if(ruleContext == null) {
-                continue;
-            }
-
-            rulesIds.add(ruleContext.getRuleIndex());
-        }
-
-        return rulesIds;
-    }
-
-    public int getChildrenSize() {
-        return children.size();
     }
 
 }
