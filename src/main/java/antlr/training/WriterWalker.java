@@ -28,22 +28,27 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
 //        ArrayList<Integer> currentRulesIds = currentContext.getAllContextsRulesIds();
 //        currentRulesIds.add(ctx.getRuleIndex());
 
-        PlaceholderContext placeholderContext;
-        boolean isFullMatch;
-        try {
+        ArrayList<PlaceholderContext> placeholdersContexts = getMatchPlaceholdersContexts(ctx);
+        boolean hasFullMatch = !placeholdersContexts.isEmpty();
 
-            placeholderContext = getFirstMatchTemplateContext(ctx);
-            isFullMatch = true;
-        }catch (Exception e){
-//            e.printStackTrace();
-            placeholderContext = null;
-            isFullMatch = false;
-        }
+//        PlaceholderContext placeholderContext;
+//        boolean isFullMatch;
+//        try {
+//
+////            placeholderContext = getFirstMatchTemplateContext(ctx);
+//            isFullMatch = true;
+//        }catch (Exception e){
+////            e.printStackTrace();
+//            placeholderContext = null;
+//            isFullMatch = false;
+//        }
 
 //        if(isFullMatches(currentRulesIds)) {
 //            PlaceholderContext placeholderContext = getFirstMatchTemplateContext(currentRulesIds);
-        if(isFullMatch){
-            newContext = new ReleaseContext(placeholderContext);
+//        if(isFullMatch){
+        if(hasFullMatch){
+            newContext = new ReleaseContext(placeholdersContexts);
+//            newContext = new ReleaseContext(placeholderContext);
             contextsStorage.add((ReleaseContext) newContext);
         } else {
             newContext = new Context();
@@ -108,7 +113,8 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
     }
 
 //    protected PlaceholderContext getFirstMatchTemplateContext(ParserRuleContext ctx) throws Exception {
-    protected PlaceholderContext getFirstMatchTemplateContext(ParserRuleContext ctx) throws Exception {
+    protected ArrayList<PlaceholderContext> getMatchPlaceholdersContexts(ParserRuleContext ctx) throws Exception {
+        ArrayList<PlaceholderContext> arResult = new ArrayList<>();
         ArrayList<Context> currentContexts = currentContext.getAllContexts();
         Collections.reverse(currentContexts);
         currentContexts.remove(0);
@@ -168,11 +174,14 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
                 }
             }
 
+            arResult.add(placeholderContext);
 //            System.out.println(currentRulesIds);
-            return templateContextsStorage.getContextByName(placeholderName);
+//            return templateContextsStorage.getContextByName(placeholderName);
         }
 
-        throw new Exception("Нет соответствующего шаблона");
+//        throw new Exception("Нет соответствующего шаблона");
+
+        return arResult;
 
     }
 
@@ -199,8 +208,8 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
 
     public boolean isEqualParserRuleContexts(ParserRuleContext readerCtx, ParserRuleContext writerCtx) {
         int ruleId = readerCtx.getRuleIndex();
-        System.out.println(ruleId);
-        System.out.println(writerCtx.getRuleIndex());
+//        System.out.println(ruleId);
+//        System.out.println(writerCtx.getRuleIndex());
         if(ruleId == TrainingParser.RULE_classDefinition) {
             TrainingParser.ClassDefinitionContext realReaderCtx = (TrainingParser.ClassDefinitionContext) readerCtx;
             TrainingParser.ClassDefinitionContext realWriterCtx = (TrainingParser.ClassDefinitionContext) writerCtx;

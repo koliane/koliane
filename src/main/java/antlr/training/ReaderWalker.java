@@ -4,9 +4,13 @@ import core.infrastructure.antlr.contexts.Context;
 import core.infrastructure.antlr.contexts.ContextsStorage;
 import core.infrastructure.antlr.contexts.PlaceholderContext;
 import core.infrastructure.antlr.contexts.PlaceholdersContextsStorage;
+import core.infrastructure.file.changers.ParseTreeHelper;
 import core.infrastructure.helpers.ReplacementHelper;
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 
+//import TrainingParser.IdentifierContext;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -52,9 +56,24 @@ public class ReaderWalker extends BaseWalker<PlaceholdersContextsStorage, Placeh
         return (PlaceholdersContextsStorage) contextsStorage;
     }
 
+//    @Override
+//    public void enterGetterSignature(TrainingParser.GetterSignatureContext ctx) {
+//        System.out.println("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
+//        ArrayList<ParseTree> z= new ArrayList<>(ctx.children);
+////        z.add(ctx);
+////        TrainingParser.IdentifierContext res = ParseTreeHelper.findContext(z, TrainingParser.IdentifierContext.class, 1);
+//        TrainingParser.IdentifierContext res = ParseTreeHelper.findContext(z, TrainingParser.IdentifierContext.class, 1);
+//    }
 
-    @Override
-    public void enterClassDefinition(TrainingParser.ClassDefinitionContext ctx) {
 
-    }
+    //    @Override
+//    public void enterConstantConstructorSignature(TrainingParser.ConstantConstructorSignatureContext ctx) {
+//        System.out.println("||||||||||||||||||");
+//        System.out.println(ctx.getText());
+//    }
+//
+//    @Override
+//    public void enterPlaceholderLiteral(TrainingParser.PlaceholderLiteralContext ctx) {
+//        System.out.println("PLACEHOLDER="+ctx.PlaceholderString()..getText());
+//    }
 }

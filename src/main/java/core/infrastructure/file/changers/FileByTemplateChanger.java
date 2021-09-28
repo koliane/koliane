@@ -7,16 +7,15 @@ import antlr.training.WriterWalker;
 import core.application.mappers.OptionsMapper;
 import core.application.mappers.ScenarioImplInterface;
 import core.application.mappers.ScenarioOptionsMapper;
+import core.infrastructure.antlr.Placeholder;
 import core.infrastructure.antlr.contexts.PlaceholderContext;
 import core.infrastructure.antlr.contexts.PlaceholdersContextsStorage;
 import core.infrastructure.antlr.contexts.ReleaseContext;
 import core.infrastructure.antlr.contexts.ReleaseContextsStorage;
+import core.infrastructure.file.changers.insert_index_calculators.ClassScopeCalculator;
 import core.infrastructure.helpers.PathHelper;
 import core.infrastructure.helpers.ReplacementHelper;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.PredictionMode;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -28,12 +27,10 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class FileByTemplateChanger {
     protected final ScenarioImplInterface optionsMapper;
@@ -106,7 +103,7 @@ public class FileByTemplateChanger {
             String releaseText,
             ReleaseContextsStorage releaseContextsStorage,
             HashMap<String, String> chunksMap
-    ) {
+    ) throws Exception {
         ArrayList<String> releaseTextsChunks = new ArrayList<>();
 
         int insertFromIndex = 0;
@@ -114,19 +111,24 @@ public class FileByTemplateChanger {
 //        System.out.println("qqqq");
 //        System.out.println(releaseContextsStorage.getContexts().size());
         for(ReleaseContext releaseContext: releaseContextsStorage.getContexts()) {
-            PlaceholderContext placeholderContext = releaseContext.getPlaceholderContext();
-            String placeholderOffset = getPlaceholderOffset(templateText, placeholderContext);
-            String placeholderLineOffset = getPlaceholderLineOffset(templateText, placeholderContext);
-            String replacementText = chunksMap.get(placeholderContext.getName());
-            System.out.println(placeholderContext.getName());
-            replacementText = buildReplacementText(replacementText, placeholderOffset, placeholderLineOffset);
+//            PlaceholderContext placeholderContext = releaseContext.getPlaceholderContext();
+            //TODO
+//            PlaceholderContext placeholderContext = releaseContext.getPlaceholderContext();
+            ArrayList<PlaceholderContext> placeholdersContexts = releaseContext.getPlaceholdersContexts();
+            for(PlaceholderContext placeholderContext: placeholdersContexts) {
+                String placeholderOffset = getPlaceholderOffset(templateText, placeholderContext);
+                String placeholderLineOffset = getPlaceholderLineOffset(templateText, placeholderContext);
+                String replacementText = chunksMap.get(placeholderContext.getName());
+//                System.out.println(placeholderContext.getName());
+                replacementText = buildReplacementText(replacementText, placeholderOffset, placeholderLineOffset);
 
-            int insertToIndex = getIndexToInsert(releaseContext);
-//            System.out.println(insertToIndex);
-            String releaseTextChunk = releaseText.substring(insertFromIndex, insertToIndex);
-            releaseTextsChunks.add(releaseTextChunk);
-            releaseTextsChunks.add(replacementText);
-            insertFromIndex = insertToIndex;
+                int insertToIndex = getIndexToInsert(placeholderContext, releaseContext);
+
+                String releaseTextChunk = releaseText.substring(insertFromIndex, insertToIndex);
+                releaseTextsChunks.add(releaseTextChunk);
+                releaseTextsChunks.add(replacementText);
+                insertFromIndex = insertToIndex;
+            }
         }
 
         if(insertFromIndex < releaseText.length()) {
@@ -143,16 +145,20 @@ public class FileByTemplateChanger {
         return resultText.toString();
     }
 
-    private int getIndexToInsert(ReleaseContext releaseContext) {
-        ParserRuleContext parserRuleContext = releaseContext.getParserRuleContext();
+    private int getIndexToInsert(PlaceholderContext readerContext, ReleaseContext writerContext) throws Exception {
+//        ClassScopeCalculator classScopeCalculator = new ClassScopeCalculator(readerContext, writerContext);
+//        classScopeCalculator.getIndexToInsert();
+
+        Placeholder placeholder = readerContext.getPlaceholder();
+        ParserRuleContext readerParserRuleContext = readerContext.getParserRuleContext();
+        ParserRuleContext writerParserRuleContext = writerContext.getParserRuleContext();
         int indexToInsert;
 
-        if(parserRuleContext instanceof TrainingParser.ClassDefinitionContext) {
-            TrainingParser.ClassDefinitionContext classDefinitionContext
-                    = (TrainingParser.ClassDefinitionContext)parserRuleContext;
-            indexToInsert = classDefinitionContext.openFigureBracket().getStop().getStopIndex() + 1;
+        if(writerParserRuleContext instanceof TrainingParser.ClassDefinitionContext) {
+            ClassScopeCalculator classScopeCalculator = new ClassScopeCalculator(readerContext, writerContext);
+            indexToInsert = classScopeCalculator.getIndexToInsert();
         } else {
-            indexToInsert = parserRuleContext.getStart().getStopIndex() + 1;
+            indexToInsert = writerParserRuleContext.getStart().getStopIndex() + 1;
         }
 
         return indexToInsert;
