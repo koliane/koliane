@@ -13,6 +13,7 @@ import core.infrastructure.antlr.contexts.PlaceholdersContextsStorage;
 import core.infrastructure.antlr.contexts.ReleaseContext;
 import core.infrastructure.antlr.contexts.ReleaseContextsStorage;
 import core.infrastructure.file.changers.insert_index_calculators.ClassScopeCalculator;
+import core.infrastructure.file.changers.insert_index_calculators.InsertInfo;
 import core.infrastructure.helpers.PathHelper;
 import core.infrastructure.helpers.ReplacementHelper;
 import org.antlr.v4.runtime.*;
@@ -60,14 +61,14 @@ public class FileByTemplateChanger {
             return;
         }
 
-        ArrayList<String> existsPlaceholders = getExistsPlaceholders(templateText, chunksMap);
-        Set<String> chunksKeys = chunksMap.keySet();
-        if(existsPlaceholders.isEmpty()) {
-            System.out.println("В шаблоне " + relativePath + " не найдены ключи "+chunksKeys);
-            return;
-        }
-
-        System.out.println(existsPlaceholders);
+//        ArrayList<String> existsPlaceholders = getExistsPlaceholders(templateText, chunksMap);
+//        Set<String> chunksKeys = chunksMap.keySet();
+//        if(existsPlaceholders.isEmpty()) {
+//            System.out.println("В шаблоне " + relativePath + " не найдены ключи "+chunksKeys);
+//            return;
+//        }
+//
+//        System.out.println(existsPlaceholders);
 //
 //        for (String existsPlaceholder : existsPlaceholders) {
 //            getMountPoint(templateText, existsPlaceholder, chunksMap.get("existsPlaceholder"));
@@ -86,9 +87,18 @@ public class FileByTemplateChanger {
 
 
         PlaceholdersContextsStorage placeholdersContextsStorage = createPlaceholdersContextsStorage(templateText);
+        ArrayList<String> existsPlaceholders = getExistsPlaceholders(placeholdersContextsStorage, chunksMap);
+        Set<String> chunksKeys = chunksMap.keySet();
+        if(existsPlaceholders.isEmpty()) {
+            System.out.println("В шаблоне " + relativePath + " не найдены ни один ключ из "+chunksKeys);
+            return;
+        }
+
+        System.out.println(existsPlaceholders);
+
+
+
         ReleaseContextsStorage releaseContextsStorage = createReleaseContextsStorage(releaseText, placeholdersContextsStorage);
-
-
         String newReleaseText = getNewReleaseText(templateText, releaseText, releaseContextsStorage, chunksMap);
 
 
@@ -116,13 +126,37 @@ public class FileByTemplateChanger {
 //            PlaceholderContext placeholderContext = releaseContext.getPlaceholderContext();
             ArrayList<PlaceholderContext> placeholdersContexts = releaseContext.getPlaceholdersContexts();
             for(PlaceholderContext placeholderContext: placeholdersContexts) {
-                String placeholderOffset = getPlaceholderOffset(templateText, placeholderContext);
-                String placeholderLineOffset = getPlaceholderLineOffset(templateText, placeholderContext);
-                String replacementText = chunksMap.get(placeholderContext.getName());
+//                String placeholderOffset = getPlaceholderOffset(templateText, placeholderContext);
+//                String placeholderLineOffset = getPlaceholderLineOffset(templateText, placeholderContext);
+//                String replacementText = chunksMap.get(placeholderContext.getName());
 //                System.out.println(placeholderContext.getName());
-                replacementText = buildReplacementText(replacementText, placeholderOffset, placeholderLineOffset);
+//                replacementText = buildReplacementText(replacementText, placeholderOffset, placeholderLineOffset);
+//                String replacementText = buildReplacementText(placeholderContext, templateText, chunksMap);
 
-                int insertToIndex = getIndexToInsert(placeholderContext, releaseContext);
+                InsertInfo insertInfo = getIndexToInsert(placeholderContext, releaseContext);
+                int insertToIndex = insertInfo.getIndexToInsert();
+
+                String replacementText;
+//                String replacementText = insertInfo.isTopAttaching()
+//                    ? buildTopReplacementText(placeholderContext, templateText, chunksMap)
+//                    : buildBottomReplacementText(placeholderContext, templateText, chunksMap);
+
+                if(insertInfo.isTopAttaching()) {
+                    replacementText = buildTopReplacementText(placeholderContext, templateText, chunksMap);
+                }else{
+                    String beforeIndexText = releaseText.substring(insertFromIndex, insertToIndex);
+                    Pattern pattern = Pattern.compile("\n([ \r\t]*?)$");
+                    Matcher matcher = pattern.matcher(beforeIndexText);
+
+                    String offset = "";
+                    if(matcher.find()) {
+                        offset = matcher.group(1);
+                    }
+
+                    insertToIndex -= offset.length();
+
+                    replacementText = buildBottomReplacementText(placeholderContext, templateText, chunksMap);
+                }
 
                 String releaseTextChunk = releaseText.substring(insertFromIndex, insertToIndex);
                 releaseTextsChunks.add(releaseTextChunk);
@@ -145,47 +179,126 @@ public class FileByTemplateChanger {
         return resultText.toString();
     }
 
-    private int getIndexToInsert(PlaceholderContext readerContext, ReleaseContext writerContext) throws Exception {
-//        ClassScopeCalculator classScopeCalculator = new ClassScopeCalculator(readerContext, writerContext);
-//        classScopeCalculator.getIndexToInsert();
-
-        Placeholder placeholder = readerContext.getPlaceholder();
-        ParserRuleContext readerParserRuleContext = readerContext.getParserRuleContext();
+    private InsertInfo getIndexToInsert(PlaceholderContext readerContext, ReleaseContext writerContext) throws Exception {
+//        Placeholder placeholder = readerContext.getPlaceholder();
+//        ParserRuleContext readerParserRuleContext = readerContext.getParserRuleContext();
         ParserRuleContext writerParserRuleContext = writerContext.getParserRuleContext();
-        int indexToInsert;
+        InsertInfo insertInfo;
+//        int indexToInsert;
 
-        if(writerParserRuleContext instanceof TrainingParser.ClassDefinitionContext) {
+        if (writerParserRuleContext instanceof TrainingParser.LibraryDefinitionContext) {
             ClassScopeCalculator classScopeCalculator = new ClassScopeCalculator(readerContext, writerContext);
-            indexToInsert = classScopeCalculator.getIndexToInsert();
+            insertInfo = classScopeCalculator.getIndexToInsert();
+        } else if(writerParserRuleContext instanceof TrainingParser.ClassDefinitionContext) {
+            ClassScopeCalculator classScopeCalculator = new ClassScopeCalculator(readerContext, writerContext);
+            insertInfo = classScopeCalculator.getIndexToInsert();
+//            indexToInsert = classScopeCalculator.getIndexToInsert().getIndexToInsert();
+
         } else {
-            indexToInsert = writerParserRuleContext.getStart().getStopIndex() + 1;
+//            indexToInsert = writerParserRuleContext.getStart().getStopIndex() + 1;
+            insertInfo = new InsertInfo();
         }
 
-        return indexToInsert;
+
+
+        return insertInfo;
     }
 
-    private String buildReplacementText(String replacementText, String placeholderOffset, String placeholderLineOffset) {
-//        System.out.println("replacementText ="+replacementText);
-        if(placeholderLineOffset.length() > 0) {
-            Pattern pattern = Pattern.compile("\n");
-            Matcher matcher = pattern.matcher(replacementText);
-            replacementText = matcher.replaceAll("\n" + placeholderLineOffset);
+    private String buildTopReplacementText(PlaceholderContext placeholderContext, String templateText, HashMap<String, String> chunksMap) throws Exception {
+        if(!chunksMap.containsKey(placeholderContext.getName())) {
+            throw new Exception("Нет текста замены для "+ placeholderContext.getName());
         }
-        replacementText = placeholderOffset + replacementText;
+        String replacementText = chunksMap.get(placeholderContext.getName());
+        String placeholderOffset = getTopPlaceholderOffset(templateText, placeholderContext);
+        String placeholderLineOffset = getPlaceholderLineOffset(templateText, placeholderContext);
+
+        addOffsetsForEachLine(replacementText, placeholderLineOffset);
+//        replacementText = placeholderOffset + replacementText;
+        replacementText = placeholderOffset + placeholderLineOffset + replacementText;
 //        replacementText = placeholderOffset + replacementText + "\r\n";
 
         return replacementText;
     }
 
+    private String buildBottomReplacementText(PlaceholderContext placeholderContext, String templateText, HashMap<String, String> chunksMap) throws Exception {
+        if(!chunksMap.containsKey(placeholderContext.getName())) {
+            throw new Exception("Нет текста замены для "+ placeholderContext.getName());
+        }
+        String replacementText = chunksMap.get(placeholderContext.getName());
+        String placeholderOffset = getBottomPlaceholderOffset(templateText, placeholderContext);
+        String placeholderLineOffset = getPlaceholderLineOffset(templateText, placeholderContext);
+
+        addOffsetsForEachLine(replacementText, placeholderLineOffset);
+        replacementText = placeholderLineOffset + replacementText + placeholderOffset;
+
+        return replacementText;
+    }
+
+    private String addOffsetsForEachLine(String replacementText, String placeholderLineOffset) {
+        if(placeholderLineOffset.length() == 0) {
+            return replacementText;
+        }
+
+        Pattern pattern = Pattern.compile("\n");
+        Matcher matcher = pattern.matcher(replacementText);
+        replacementText = matcher.replaceAll("\n" + placeholderLineOffset);
+
+        return replacementText;
+    }
+
     private String getPlaceholderLineOffset(String templateText, PlaceholderContext context) {
-        return getOffset("[ \r\t]*$", templateText, context);
+        return getTopOffset("[ \r\t]*$", templateText, context);
     }
 
-    private String getPlaceholderOffset(String templateText, PlaceholderContext context) {
-        return getOffset("[ \r\n\t]*$", templateText, context);
+
+    private String getTopPlaceholderOffset(String templateText, PlaceholderContext context) {
+        return "\r\n";
+//        return getTopOffset("[ \r\n\t]*$", templateText, context);
     }
 
-    private String getOffset(String offsetPattern, String templateText, PlaceholderContext context) {
+
+    private String getBottomPlaceholderOffset(String templateText, PlaceholderContext context) {
+//        return getBottomOffset("^[ \r\n\t]*", templateText, context);
+        return getBottomOffset("[ \r\n\t]*$", templateText, context);
+    }
+
+
+
+    private String getBottomOffset(String offsetPattern, String templateText, PlaceholderContext context) {
+//        Token stopToken = context.getParserRuleContext().getStop();
+//        String stopText = templateText.substring(stopToken.getStopIndex()+1);
+//
+//        ////////////////////////////////////////
+//
+//        Pattern shiftPattern = Pattern.compile("\n([ \r\t]*?)$");
+//        Matcher shiftMatcher = shiftPattern.matcher(stopText);
+//
+//        String shiftOffset = "";
+//        if(shiftMatcher.find()) {
+//            shiftOffset = shiftMatcher.group(1);
+//        }
+//
+//        if(shiftOffset.length() > 0) {
+////            stopText = stopText.substring(0, shiftOffset.length() - 2);
+//            stopText = stopText.substring(0, stopText.length() - shiftOffset.length());
+//        }
+//
+//        ////////////////////////////////////////
+//
+//        Pattern pattern = Pattern.compile(offsetPattern);
+//
+//        Matcher matcher = pattern.matcher(stopText);
+//
+//        String offset = "";
+//        if(matcher.find()) {
+//            offset = stopText.substring(matcher.start(), matcher.end());
+//        }
+
+//        return offset;
+        return "\r\n";
+    }
+
+    private String getTopOffset(String offsetPattern, String templateText, PlaceholderContext context) {
         Token startToken = context.getParserRuleContext().getStart();
         String startText = templateText.substring(0, startToken.getStartIndex());
         Pattern pattern = Pattern.compile(offsetPattern);
@@ -229,20 +342,35 @@ public class FileByTemplateChanger {
     }
 
 
-    protected ArrayList<String> getExistsPlaceholders(String templateText, HashMap<String, String> chunksMap) {
-        ArrayList<String> existsPlaceholders = new ArrayList<String>();
+
+
+    protected ArrayList<String> getExistsPlaceholders(PlaceholdersContextsStorage placeholdersContextsStorage, HashMap<String, String> chunksMap) {
+        ArrayList<String> existsPlaceholders = new ArrayList<>();
         Set<String> chunksKeys = chunksMap.keySet();
 
-        Pattern pattern = Pattern.compile("#-.+?-#");
-        Matcher matcher = pattern.matcher(templateText);
-        while (matcher.find()){
-            String placeholder = templateText.substring(matcher.start(), matcher.end());
-            String clearedPlaceholder = ReplacementHelper.getClearedPlaceholder(placeholder);
-            if(chunksKeys.contains(clearedPlaceholder) && !existsPlaceholders.contains(clearedPlaceholder)) {
-                existsPlaceholders.add(clearedPlaceholder);
+        for(String name: placeholdersContextsStorage.getPlaceholdersNames()) {
+            if(chunksKeys.contains(name) && !existsPlaceholders.contains(name)) {
+                existsPlaceholders.add(name);
             }
         }
 
         return existsPlaceholders;
     }
+
+//    protected ArrayList<String> getExistsPlaceholders(String templateText, HashMap<String, String> chunksMap) {
+//        ArrayList<String> existsPlaceholders = new ArrayList<String>();
+//        Set<String> chunksKeys = chunksMap.keySet();
+//
+//        Pattern pattern = Pattern.compile("#-.+?-#");
+//        Matcher matcher = pattern.matcher(templateText);
+//        while (matcher.find()){
+//            String placeholder = templateText.substring(matcher.start(), matcher.end());
+//            String clearedPlaceholder = ReplacementHelper.getClearedPlaceholder(placeholder);
+//            if(chunksKeys.contains(clearedPlaceholder) && !existsPlaceholders.contains(clearedPlaceholder)) {
+//                existsPlaceholders.add(clearedPlaceholder);
+//            }
+//        }
+//
+//        return existsPlaceholders;
+//    }
 }

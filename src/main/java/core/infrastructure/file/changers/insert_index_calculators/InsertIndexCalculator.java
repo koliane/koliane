@@ -13,5 +13,5 @@ abstract public class InsertIndexCalculator {
         this.writerContext = writerContext;
     }
 
-    abstract public int getIndexToInsert() throws Exception;
+    abstract public InsertInfo getIndexToInsert() throws Exception;
 }

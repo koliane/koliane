@@ -12,6 +12,8 @@ import java.util.Arrays;
 
 public abstract class BaseWalker<S, C> extends TrainingBaseListener{
     static protected final Integer[] contextRules = {
+//            TrainingParser.RULE_libraryDefinition,
+
             TrainingParser.RULE_classDefinition,
 //            TrainingParser.RULE_classMemberDefinition,
 //            TrainingParser.RULE_methodSignature,
