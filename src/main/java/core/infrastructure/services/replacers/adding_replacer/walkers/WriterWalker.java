@@ -155,6 +155,7 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
             if (templateRulesIds.size() != currentRulesIds.size()) {
                 continue;
             }
+            System.out.println("YOOOOOOOOO");
 
 //            System.out.println(templateRulesIds);
 //            System.out.println(templateParserRuleContext.getRuleIndex());

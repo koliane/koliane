@@ -20,6 +20,11 @@ public class LibraryScopeIndexCalculator extends ScopeIndexCalculator<LibraryDef
     }
 
     @Override
+    protected LibraryDefinitionContext getReaderParserRuleContext(PlaceholderContext readerContext) {
+        return (LibraryDefinitionContext) readerContext.getParserRuleContext().getParent().getParent();
+    }
+
+    @Override
     protected int getOpenScopeIndex(LibraryDefinitionContext writerContext) {
         return 0;
     }

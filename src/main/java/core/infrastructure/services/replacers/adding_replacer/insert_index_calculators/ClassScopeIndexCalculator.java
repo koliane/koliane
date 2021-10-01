@@ -20,6 +20,11 @@ public class ClassScopeIndexCalculator extends ScopeIndexCalculator<ClassDefinit
     }
 
     @Override
+    protected ClassDefinitionContext getReaderParserRuleContext(PlaceholderContext readerContext) {
+        return (ClassDefinitionContext) readerContext.getParserRuleContext().getParent().getParent();
+    }
+
+    @Override
     protected int getOpenScopeIndex(ClassDefinitionContext writerContext) {
         return writerContext.openFigureBracket().getStop().getStopIndex() + 1;
     }

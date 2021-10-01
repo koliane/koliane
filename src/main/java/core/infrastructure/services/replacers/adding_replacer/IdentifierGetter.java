@@ -8,6 +8,15 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.util.*;
 
 public class IdentifierGetter<T extends ParserRuleContext> {
+    private static final String FOR_STATEMENT_PREFIX = "for";
+    private static final String WHILE_STATEMENT_PREFIX = "while";
+    private static final String DO_STATEMENT_PREFIX = "do";
+    private static final String SWITCH_STATEMENT_PREFIX = "switch";
+    private static final String IF_STATEMENT_PREFIX = "if";
+    private static final String TRY_STATEMENT_PREFIX = "try";
+    private static final String EXPRESSION_STATEMENT_PREFIX = "expression";
+    private static final String ASSERT_STATEMENT_PREFIX = "assert";
+
     T primaryContext;
 
     public IdentifierGetter(T primaryContext) {
@@ -21,6 +30,10 @@ public class IdentifierGetter<T extends ParserRuleContext> {
 
         if(primaryContext instanceof ClassMemberDefinitionContext) {
             return fromClassMemberDefinition((ClassMemberDefinitionContext) primaryContext);
+        }
+
+        if(primaryContext instanceof StatementContext) {
+            return fromStatement((StatementContext) primaryContext);
         }
 
         if(primaryContext instanceof PlaceholderLiteralContext) {
@@ -120,6 +133,311 @@ public class IdentifierGetter<T extends ParserRuleContext> {
         return new ArrayList<>();
     }
 
+    /** @link statement */
+    protected List<String> fromStatement(StatementContext context) {
+        return fromNonLabledStatment(context.nonLabledStatment());
+    }
+
+    //TODO
+    /** @link nonLabledStatment */
+    protected List<String> fromNonLabledStatment(NonLabledStatmentContext context) {
+        Set<Class> availableContexts = new HashSet<>();
+        Collections.addAll(availableContexts,
+                LocalVariableDeclarationContext.class,
+                ForStatementContext.class,
+                WhileStatementContext.class,
+                DoStatementContext.class,
+                SwitchStatementContext.class,
+                IfStatementContext.class,
+                RethrowStatmentContext.class,
+                TryStatementContext.class,
+                BreakStatementContext.class,
+                ContinueStatementContext.class,
+                ReturnStatementContext.class,
+                YieldStatementContext.class,
+                YieldEachStatementContext.class,
+                ExpressionStatementContext.class,
+                AssertStatementContext.class,
+                LocalFunctionDeclarationContext.class
+
+//                TypeAliasContext.class,
+//                FunctionSignatureContext.class,
+//                GetterSignatureContext.class,
+//                SetterSignatureContext.class,
+//                IdentifierContext.class,
+//                StaticFinalDeclarationListContext.class,
+//                VariableDeclarationContext.class,
+//                PlaceholderLiteralContext.class
+        );
+
+        List<ParseTree> children = context.children;
+        for(ParseTree child: children) {
+            if (!availableContexts.contains(child.getClass())) {
+                continue;
+            }
+
+            if (child instanceof LocalVariableDeclarationContext) {
+                return fromLocalVariableDeclaration((LocalVariableDeclarationContext) child);
+            }
+
+            if (child instanceof ForStatementContext) {
+                return fromForStatement((ForStatementContext) child);
+            }
+
+            if (child instanceof WhileStatementContext) {
+                return fromWhileStatement((WhileStatementContext) child);
+            }
+
+            if (child instanceof DoStatementContext) {
+                return fromDoStatement((DoStatementContext) child);
+            }
+
+            if (child instanceof SwitchStatementContext) {
+                return fromSwitchStatement((SwitchStatementContext) child);
+            }
+
+            if (child instanceof IfStatementContext) {
+                return fromIfStatement((IfStatementContext) child);
+            }
+
+            if (child instanceof RethrowStatmentContext) {
+                return fromRethrowStatement((RethrowStatmentContext) child);
+            }
+
+            if (child instanceof TryStatementContext) {
+                return fromTryStatement((TryStatementContext) child);
+            }
+
+            if (child instanceof BreakStatementContext) {
+                return fromBreakStatement((BreakStatementContext) child);
+            }
+
+            if (child instanceof ContinueStatementContext) {
+                return fromContinueStatement((ContinueStatementContext) child);
+            }
+
+            if (child instanceof ReturnStatementContext) {
+                return fromReturnStatement((ReturnStatementContext) child);
+            }
+
+            if (child instanceof YieldStatementContext) {
+                return fromYieldStatement((YieldStatementContext) child);
+            }
+
+            if (child instanceof YieldEachStatementContext) {
+                return fromYieldEachStatement((YieldEachStatementContext) child);
+            }
+
+            if (child instanceof ExpressionStatementContext) {
+                return fromExpressionStatement((ExpressionStatementContext) child);
+            }
+
+            if (child instanceof AssertStatementContext) {
+                return fromAssertStatement((AssertStatementContext) child);
+            }
+
+            if (child instanceof LocalFunctionDeclarationContext) {
+                return fromLocalFunctionDeclaration((LocalFunctionDeclarationContext) child);
+            }
+        }
+
+        return new ArrayList<>();
+    }
+
+
+    /** @link forStatement */
+    protected List<String> fromForStatement(ForStatementContext context) {
+        return toArray( FOR_STATEMENT_PREFIX + context.forLoopParts().getText());
+    }
+
+    /** @link whileStatement */
+    protected List<String> fromWhileStatement(WhileStatementContext context) {
+        return toArray(WHILE_STATEMENT_PREFIX + context.expression().getText());
+    }
+
+    /** @link doStatement */
+    protected List<String> fromDoStatement(DoStatementContext context) {
+        return toArray(DO_STATEMENT_PREFIX + context.expression().getText());
+    }
+
+    /** @link switchStatement */
+    protected List<String> fromSwitchStatement(SwitchStatementContext context) {
+        return toArray(SWITCH_STATEMENT_PREFIX + context.expression().getText());
+    }
+
+    /** @link ifStatement */
+    protected List<String> fromIfStatement(IfStatementContext context) {
+        return toArray(IF_STATEMENT_PREFIX + context.expression().getText());
+    }
+
+    /** @link rethrowStatment */
+    protected List<String> fromRethrowStatement(RethrowStatmentContext context) {
+        return toArray(context.getText());
+    }
+
+    /** @link tryStatement */
+    protected List<String> fromTryStatement(TryStatementContext context) {
+        List<ParseTree> children = context.children;
+        ArrayList<String> results = new ArrayList<>();
+        Set<Class> availableContexts = new HashSet<>();
+        Collections.addAll(availableContexts,
+                OnPartContext.class,
+                FinallyPartContext.class
+        );
+
+        for(ParseTree child: children) {
+            if (!availableContexts.contains(child.getClass())) {
+                continue;
+            }
+
+            if (child instanceof OnPartContext) {
+                results.addAll(fromOnPart((OnPartContext) child));
+                continue;
+            }
+
+            if (child instanceof FinallyPartContext) {
+                results.addAll(fromFinallyPart((FinallyPartContext) child));
+                continue;
+            }
+        }
+
+
+
+        return toArray(TRY_STATEMENT_PREFIX + results.toString());
+    }
+
+    /** @link finallyPart */
+    protected List<String> fromFinallyPart(FinallyPartContext context) {
+        List<String> results = new ArrayList<>();
+        results.add("finally");
+
+        return results;
+    }
+
+    /** @link onPart */
+    protected List<String> fromOnPart(OnPartContext context) {
+        List<String> results = new ArrayList<>();
+
+        if(context.dtype() != null) {
+            results.addAll(fromDtype(context.dtype()));
+        }
+
+        if(context.catchPart() != null) {
+            results.addAll(fromCatchPart(context.catchPart()));
+        }
+
+        return results;
+    }
+
+    /** @link catchPart */
+    protected List<String> fromCatchPart(CatchPartContext context) {
+        List<ParseTree> children = context.children;
+        List<String> results = new ArrayList<>();
+        Set<Class> availableContexts = new HashSet<>();
+        Collections.addAll(availableContexts,
+            IdentifierContext.class
+        );
+
+        for(ParseTree child: children) {
+            if (!availableContexts.contains(child.getClass())) {
+                continue;
+            }
+
+            results.addAll(fromIdentifier((IdentifierContext) child));
+        }
+
+        return results;
+    }
+
+    /** @link breakStatement */
+    protected List<String> fromBreakStatement(BreakStatementContext context) {
+        return toArray(context.getText());
+    }
+
+    /** @link continueStatement */
+    protected List<String> fromContinueStatement(ContinueStatementContext context) {
+        return toArray(context.getText());
+    }
+
+    /** @link returnStatement */
+    protected List<String> fromReturnStatement(ReturnStatementContext context) {
+        return toArray(context.getText());
+    }
+
+    /** @link yieldStatement */
+    protected List<String> fromYieldStatement(YieldStatementContext context) {
+        return toArray(context.getText());
+    }
+
+    /** @link yieldEachStatement */
+    protected List<String> fromYieldEachStatement(YieldEachStatementContext context) {
+        return toArray(context.getText());
+    }
+
+    /** @link expressionStatement */
+    protected List<String> fromExpressionStatement(ExpressionStatementContext context) {
+        return toArray(EXPRESSION_STATEMENT_PREFIX + context.getText());
+    }
+
+    /** @link assertStatement */
+    protected List<String> fromAssertStatement(AssertStatementContext context) {
+        return toArray(ASSERT_STATEMENT_PREFIX + context.getText());
+    }
+
+    /** @link localFunctionDeclaration */
+    protected List<String> fromLocalFunctionDeclaration(LocalFunctionDeclarationContext context) {
+        return fromFunctionSignature(context.functionSignature());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /** @link localVariableDeclaration */
+    protected List<String> fromLocalVariableDeclaration(LocalVariableDeclarationContext context) {
+        return fromInitializedVariableDeclaration(context.initializedVariableDeclaration());
+    }
+
+
+    /** @link initializedVariableDeclaration */
+    protected List<String> fromInitializedVariableDeclaration(InitializedVariableDeclarationContext context) {
+        List<ParseTree> children = context.children;
+        ArrayList<String> results = new ArrayList<>();
+        Set<Class> availableContexts = new HashSet<>();
+        Collections.addAll(availableContexts,
+                DeclaredIdentifierContext.class,
+                InitializedIdentifierContext.class
+        );
+
+        for(ParseTree child: children) {
+            if (!availableContexts.contains(child.getClass())) {
+                continue;
+            }
+
+            if (child instanceof DeclaredIdentifierContext) {
+                results.addAll(fromDeclaredIdentifier((DeclaredIdentifierContext) child));
+                continue;
+            }
+
+            if (child instanceof InitializedIdentifierContext) {
+                results.addAll(fromInitializedIdentifier((InitializedIdentifierContext) child));
+                continue;
+            }
+        }
+
+        return results;
+    }
 
     /** @link variableDeclaration */
     protected List<String> fromVariableDeclaration(VariableDeclarationContext context) {
@@ -179,17 +497,6 @@ public class IdentifierGetter<T extends ParserRuleContext> {
     protected List<String> fromImportScope(ImportScopeContext context) {
         return toArray(context.getText());
     }
-
-//    /** @link importOrExport */
-//    protected List<String> fromImportOrExport(ImportOrExportContext context) {
-////        return toArray(context.getText());
-//        List<ParseTree> children = context.children;
-//        if(context.libraryExport() != null) {
-//
-//        }
-//
-//
-//    }
 
 
 
@@ -412,7 +719,10 @@ public class IdentifierGetter<T extends ParserRuleContext> {
         return fromClassName(context.className());
     }
 
-
+    /** @link dtype */
+    protected List<String> fromDtype(DtypeContext context) {
+        return toArray(context.getText());
+    }
 
 //    protected String firstFromIdentifier(IdentifierContext context) {
 //        return fromIdentifier(context).get(0);

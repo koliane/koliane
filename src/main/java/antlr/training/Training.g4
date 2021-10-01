@@ -90,7 +90,7 @@ functionBody
 block
   : openFigureBracket statements closeFigureBracket
 //  : '{' statements '}'
-//  | placeholderLiteral
+  | placeholderLiteral
   ;
 
 // 9.2 Formal Parameters
@@ -776,6 +776,7 @@ catchPart
 finallyPart
   : 'finally' block
   ;
+
 
 // 17.12 Return
 

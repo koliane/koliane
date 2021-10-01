@@ -1,5 +1,6 @@
 package core.infrastructure.services.replacers.adding_replacer;
 
+import core.infrastructure.services.replacers.adding_replacer.insert_index_calculators.FunctionBodyScopeIndexCalculator;
 import core.infrastructure.services.replacers.adding_replacer.walkers.ReaderWalker;
 import antlr.training.TrainingLexer;
 import antlr.training.TrainingParser;
@@ -124,9 +125,10 @@ public class AddingReplacer extends BaseReplacer {
             ClassScopeIndexCalculator classScopeCalculator = new ClassScopeIndexCalculator(readerContext, writerContext);
             insertInfo = classScopeCalculator.getIndexToInsert();
 
-        } else if(writerParserRuleContext instanceof TrainingParser.StatementsContext) {
-            ClassScopeIndexCalculator classScopeCalculator = new ClassScopeIndexCalculator(readerContext, writerContext);
+        } else if(writerParserRuleContext instanceof TrainingParser.FunctionBodyContext) {
+            FunctionBodyScopeIndexCalculator classScopeCalculator = new FunctionBodyScopeIndexCalculator(readerContext, writerContext);
             insertInfo = classScopeCalculator.getIndexToInsert();
+
         } else {
             insertInfo = new InsertInfo();
         }

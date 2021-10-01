@@ -13,7 +13,6 @@ public abstract class BaseWalker<S, C> extends TrainingBaseListener {
             TrainingParser.RULE_libraryDefinition,
 
             TrainingParser.RULE_classDefinition,
-//            TrainingParser.RULE_classMemberDefinition,
 //            TrainingParser.RULE_methodSignature,
 //            TrainingParser.RULE_functionExpression,
 //            TrainingParser.RULE_localFunctionDeclaration,

@@ -21,8 +21,10 @@ public abstract class ScopeIndexCalculator<T extends ParserRuleContext, I extend
     @Override
     public InsertInfo getIndexToInsert() throws Exception {
         Placeholder placeholder = readerContext.getPlaceholder();
-        ParserRuleContext readerParserRuleContext = readerContext.getParserRuleContext().getParent().getParent();
+//        ParserRuleContext readerParserRuleContext = readerContext.getParserRuleContext().getParent().getParent();
+        ParserRuleContext readerParserRuleContext = getReaderParserRuleContext(readerContext);
         ParserRuleContext writerParserRuleContext = writerContext.getParserRuleContext();
+        System.out.println(readerParserRuleContext.getClass());
 
         T readerClassDefinitionContext = (T) readerParserRuleContext;
         T writerClassDefinitionContext = (T) writerParserRuleContext;
@@ -212,8 +214,10 @@ public abstract class ScopeIndexCalculator<T extends ParserRuleContext, I extend
 
     private List<I> getMemberDefinitionContexts(T classDefinitionContext) {
         List<I> memberDefinitionContexts = new ArrayList<>();
+//        List<ParseTree> items = getItems(classDefinitionContext);
+        List<ParseTree> items = getPreparedItems(classDefinitionContext);
 //        classDefinitionContext.children.forEach(ruleContext -> {
-        getItems(classDefinitionContext).forEach(ruleContext -> {
+        items.forEach(ruleContext -> {
 //            if(ruleContext instanceof ClassMemberDefinitionContext ) {
 //            if(ruleContext instanceof I) {
             if(ruleContext.getClass().isAssignableFrom(classI)) {
@@ -263,7 +267,17 @@ public abstract class ScopeIndexCalculator<T extends ParserRuleContext, I extend
         return result;
     }
 
+    private List<ParseTree> getPreparedItems(T writerContext) {
+        List<ParseTree> items = getItems(writerContext);
+        if(items == null) {
+            items = new ArrayList<>();
+        }
+
+        return items;
+    }
+
     abstract protected List<ParseTree> getItems(T writerContext);
+    abstract protected T getReaderParserRuleContext(PlaceholderContext readerContext);
     abstract protected int getOpenScopeIndex(T writerContext);
     abstract protected int getCloseScopeIndex(T writerContext);
 }
