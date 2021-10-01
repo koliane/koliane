@@ -1,11 +1,11 @@
-package antlr.training;
+package core.infrastructure.services.replacers.adding_replacer.walkers;
 
-import core.infrastructure.antlr.contexts.*;
+import antlr.training.TrainingParser;
 import core.infrastructure.helpers.ReplacementHelper;
+import core.infrastructure.services.replacers.adding_replacer.contexts.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseContext> {
     private PlaceholdersContextsStorage templateContextsStorage;

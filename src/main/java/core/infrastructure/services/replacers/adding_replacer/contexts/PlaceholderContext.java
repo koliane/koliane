@@ -1,10 +1,4 @@
-package core.infrastructure.antlr.contexts;
-
-import core.infrastructure.antlr.Placeholder;
-import org.antlr.v4.runtime.ParserRuleContext;
-
-import java.util.ArrayList;
-import java.util.Collections;
+package core.infrastructure.services.replacers.adding_replacer.contexts;
 
 public class PlaceholderContext extends Context {
     private final Placeholder placeholder;

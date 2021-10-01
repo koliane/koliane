@@ -1,16 +1,14 @@
-package antlr.training;
+package core.infrastructure.services.replacers.adding_replacer.walkers;
 
-import core.infrastructure.antlr.contexts.Context;
-import core.infrastructure.antlr.contexts.ContextsStorage;
-import core.infrastructure.antlr.contexts.PlaceholderContext;
-import core.infrastructure.helpers.ReplacementHelper;
+import antlr.training.TrainingBaseListener;
+import antlr.training.TrainingParser;
+import core.infrastructure.services.replacers.adding_replacer.contexts.Context;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.Interval;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-public abstract class BaseWalker<S, C> extends TrainingBaseListener{
+public abstract class BaseWalker<S, C> extends TrainingBaseListener {
     static protected final Integer[] contextRules = {
             TrainingParser.RULE_libraryDefinition,
 

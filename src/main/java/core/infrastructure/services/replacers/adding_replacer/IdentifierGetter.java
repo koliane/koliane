@@ -1,4 +1,4 @@
-package core.infrastructure.file.changers;
+package core.infrastructure.services.replacers.adding_replacer;
 
 import antlr.training.TrainingParser.*;
 import core.infrastructure.helpers.ReplacementHelper;
@@ -6,7 +6,6 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class IdentifierGetter<T extends ParserRuleContext> {
     T primaryContext;

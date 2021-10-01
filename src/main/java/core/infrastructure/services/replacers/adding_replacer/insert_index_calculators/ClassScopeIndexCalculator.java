@@ -1,13 +1,22 @@
-package core.infrastructure.file.changers.insert_index_calculators;
+package core.infrastructure.services.replacers.adding_replacer.insert_index_calculators;
 
+import antlr.training.TrainingParser;
 import antlr.training.TrainingParser.ClassDefinitionContext;
 import antlr.training.TrainingParser.ClassMemberDefinitionContext;
-import core.infrastructure.antlr.contexts.PlaceholderContext;
-import core.infrastructure.antlr.contexts.ReleaseContext;
+import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholderContext;
+import core.infrastructure.services.replacers.adding_replacer.contexts.ReleaseContext;
+import org.antlr.v4.runtime.tree.ParseTree;
+
+import java.util.List;
 
 public class ClassScopeIndexCalculator extends ScopeIndexCalculator<ClassDefinitionContext, ClassMemberDefinitionContext> {
     public ClassScopeIndexCalculator(PlaceholderContext readerContext, ReleaseContext writerContext) {
         super(readerContext, writerContext, ClassMemberDefinitionContext.class);
+    }
+
+    @Override
+    protected List<ParseTree> getItems(ClassDefinitionContext writerContext) {
+        return writerContext.children;
     }
 
     @Override

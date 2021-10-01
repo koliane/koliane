@@ -90,7 +90,7 @@ functionBody
 block
   : openFigureBracket statements closeFigureBracket
 //  : '{' statements '}'
-  | placeholderLiteral
+//  | placeholderLiteral
   ;
 
 // 9.2 Formal Parameters

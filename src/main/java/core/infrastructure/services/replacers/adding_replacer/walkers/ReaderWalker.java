@@ -1,16 +1,13 @@
-package antlr.training;
+package core.infrastructure.services.replacers.adding_replacer.walkers;
 
-import core.infrastructure.antlr.contexts.Context;
-import core.infrastructure.antlr.contexts.ContextsStorage;
-import core.infrastructure.antlr.contexts.PlaceholderContext;
-import core.infrastructure.antlr.contexts.PlaceholdersContextsStorage;
-import core.infrastructure.file.changers.ParseTreeHelper;
+import antlr.training.TrainingParser;
+import core.infrastructure.services.replacers.adding_replacer.contexts.Context;
+import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholderContext;
+import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholdersContextsStorage;
 import core.infrastructure.helpers.ReplacementHelper;
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ParseTree;
 
 //import TrainingParser.IdentifierContext;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 

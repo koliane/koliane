@@ -1,25 +1,9 @@
-import antlr.training.TrainingLexer;
-import antlr.training.TrainingParser;
-import antlr.training.ReaderWalker;
-import antlr.training.WriterWalker;
 import core.application.mappers.AddEntityOptionsMapper;
-import core.infrastructure.antlr.contexts.*;
 import core.infrastructure.file.changers.FileByTemplateChanger;
-import core.infrastructure.helpers.PathHelper;
 import core.infrastructure.helpers.ReplacementHelper;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 
 //long m = System.currentTimeMillis();

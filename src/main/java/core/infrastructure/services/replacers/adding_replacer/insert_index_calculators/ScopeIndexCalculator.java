@@ -1,14 +1,12 @@
-package core.infrastructure.file.changers.insert_index_calculators;
+package core.infrastructure.services.replacers.adding_replacer.insert_index_calculators;
 
-import antlr.training.TrainingParser;
 import antlr.training.TrainingParser.PlaceholderLiteralContext;
-import antlr.training.TrainingParser.ClassDefinitionContext;
-import antlr.training.TrainingParser.ClassMemberDefinitionContext;
-import core.infrastructure.antlr.Placeholder;
-import core.infrastructure.antlr.contexts.PlaceholderContext;
-import core.infrastructure.antlr.contexts.ReleaseContext;
-import core.infrastructure.file.changers.IdentifierGetter;
+import core.infrastructure.services.replacers.adding_replacer.contexts.Placeholder;
+import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholderContext;
+import core.infrastructure.services.replacers.adding_replacer.contexts.ReleaseContext;
+import core.infrastructure.services.replacers.adding_replacer.IdentifierGetter;
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.*;
 
@@ -214,7 +212,8 @@ public abstract class ScopeIndexCalculator<T extends ParserRuleContext, I extend
 
     private List<I> getMemberDefinitionContexts(T classDefinitionContext) {
         List<I> memberDefinitionContexts = new ArrayList<>();
-        classDefinitionContext.children.forEach(ruleContext -> {
+//        classDefinitionContext.children.forEach(ruleContext -> {
+        getItems(classDefinitionContext).forEach(ruleContext -> {
 //            if(ruleContext instanceof ClassMemberDefinitionContext ) {
 //            if(ruleContext instanceof I) {
             if(ruleContext.getClass().isAssignableFrom(classI)) {
@@ -264,6 +263,7 @@ public abstract class ScopeIndexCalculator<T extends ParserRuleContext, I extend
         return result;
     }
 
+    abstract protected List<ParseTree> getItems(T writerContext);
     abstract protected int getOpenScopeIndex(T writerContext);
     abstract protected int getCloseScopeIndex(T writerContext);
 }
