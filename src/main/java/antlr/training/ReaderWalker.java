@@ -56,24 +56,4 @@ public class ReaderWalker extends BaseWalker<PlaceholdersContextsStorage, Placeh
         return (PlaceholdersContextsStorage) contextsStorage;
     }
 
-//    @Override
-//    public void enterGetterSignature(TrainingParser.GetterSignatureContext ctx) {
-//        System.out.println("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
-//        ArrayList<ParseTree> z= new ArrayList<>(ctx.children);
-////        z.add(ctx);
-////        TrainingParser.IdentifierContext res = ParseTreeHelper.findContext(z, TrainingParser.IdentifierContext.class, 1);
-//        TrainingParser.IdentifierContext res = ParseTreeHelper.findContext(z, TrainingParser.IdentifierContext.class, 1);
-//    }
-
-
-    //    @Override
-//    public void enterConstantConstructorSignature(TrainingParser.ConstantConstructorSignatureContext ctx) {
-//        System.out.println("||||||||||||||||||");
-//        System.out.println(ctx.getText());
-//    }
-//
-//    @Override
-//    public void enterPlaceholderLiteral(TrainingParser.PlaceholderLiteralContext ctx) {
-//        System.out.println("PLACEHOLDER="+ctx.PlaceholderString()..getText());
-//    }
 }

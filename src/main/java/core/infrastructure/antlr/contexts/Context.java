@@ -57,17 +57,6 @@ public class Context {
         children.add(child);
     }
 
-//    public ArrayList<Context> getNestedContexts() {
-//        ArrayList<Context> contexts = new ArrayList<>();
-//        if(parent == null) {
-//            return contexts;
-//        }
-//
-//        contexts.add(parent);
-//        contexts.addAll(parent.getNestedContexts());
-//
-//        return contexts;
-//    }
 
     public ArrayList<Context> getAllContexts() {
         ArrayList<Context> contexts = new ArrayList<>();

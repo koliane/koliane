@@ -145,7 +145,6 @@ defaultNamedParameter
 classDefinition
   : metadata 'abstract'? 'class' className typeParameters?
 //  : metadata 'abstract'? 'class' identifier typeParameters?
-//  : metadata 'abstract'? 'class' (identifier | placeholderLiteral) typeParameters?
     superclass? mixins? interfaces?
 //    '{' (metadata classMemberDefinition)* '}'
     openFigureBracket (metadata classMemberDefinition)* closeFigureBracket
@@ -256,14 +255,16 @@ interfaces: 'implements' typeList;
 
 // 12.1 Mixin Application
 mixinApplicationClass
-  : identifier typeParameters? '=' mixinApplication ';';
+  : className typeParameters? '=' mixinApplication ';';
+//  : identifier typeParameters? '=' mixinApplication ';';
 mixinApplication
   : dtype mixins interfaces?
   ;
 
 // 13 Enums
 enumType
-  : metadata 'enum' identifier
+  : metadata 'enum' className
+//  : metadata 'enum' identifier
 //    '{' enumEntry (',' enumEntry)* ','? '}'
     openFigureBracket enumEntry (',' enumEntry)* ','? closeFigureBracket
   ;
@@ -834,7 +835,8 @@ getOrSet
   | 'set'
   ;
 libraryDefinition
-  : scriptTag? libraryName? importOrExport* partDirective*
+//  : scriptTag? libraryName? importOrExport* partDirective*
+  : importScope
     topLevelDefinition*
   ;
 scriptTag
@@ -1021,3 +1023,4 @@ openFigureBracket: OPEN_FIGURE_BRACKET;
 closeFigureBracket: CLOSE_FIGURE_BRACKET;
 
 className: identifier | placeholderLiteral | stringWithPlaceholderLiteral;
+importScope: scriptTag? libraryName? importOrExport* partDirective*;

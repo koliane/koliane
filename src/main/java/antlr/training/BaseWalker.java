@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 public abstract class BaseWalker<S, C> extends TrainingBaseListener{
     static protected final Integer[] contextRules = {
-//            TrainingParser.RULE_libraryDefinition,
+            TrainingParser.RULE_libraryDefinition,
 
             TrainingParser.RULE_classDefinition,
 //            TrainingParser.RULE_classMemberDefinition,
@@ -56,6 +56,8 @@ public abstract class BaseWalker<S, C> extends TrainingBaseListener{
 //            int[] availableParentRules = {TrainingParser.RULE_classDefinition, TrainingParser.RULE_className};
 //            if({TrainingParser.RULE_classDefinition}.co) {
 //            if(ctx.getParent().getRuleIndex() == TrainingParser.RULE_classDefinition) {
+
+
             if(ctx.getParent().getRuleIndex() == TrainingParser.RULE_className) {
                 return false;
             }

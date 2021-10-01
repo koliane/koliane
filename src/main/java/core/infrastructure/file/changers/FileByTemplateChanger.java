@@ -4,25 +4,21 @@ import antlr.training.ReaderWalker;
 import antlr.training.TrainingLexer;
 import antlr.training.TrainingParser;
 import antlr.training.WriterWalker;
-import core.application.mappers.OptionsMapper;
 import core.application.mappers.ScenarioImplInterface;
-import core.application.mappers.ScenarioOptionsMapper;
-import core.infrastructure.antlr.Placeholder;
 import core.infrastructure.antlr.contexts.PlaceholderContext;
 import core.infrastructure.antlr.contexts.PlaceholdersContextsStorage;
 import core.infrastructure.antlr.contexts.ReleaseContext;
 import core.infrastructure.antlr.contexts.ReleaseContextsStorage;
-import core.infrastructure.file.changers.insert_index_calculators.ClassScopeCalculator;
+import core.infrastructure.file.changers.insert_index_calculators.ClassScopeIndexCalculator;
 import core.infrastructure.file.changers.insert_index_calculators.InsertInfo;
+import core.infrastructure.file.changers.insert_index_calculators.LibraryScopeIndexCalculator;
 import core.infrastructure.helpers.PathHelper;
-import core.infrastructure.helpers.ReplacementHelper;
+import core.infrastructure.utils.TextUtilities;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.atn.PredictionMode;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -31,7 +27,6 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class FileByTemplateChanger {
     protected final ScenarioImplInterface optionsMapper;
@@ -61,21 +56,6 @@ public class FileByTemplateChanger {
             return;
         }
 
-//        ArrayList<String> existsPlaceholders = getExistsPlaceholders(templateText, chunksMap);
-//        Set<String> chunksKeys = chunksMap.keySet();
-//        if(existsPlaceholders.isEmpty()) {
-//            System.out.println("В шаблоне " + relativePath + " не найдены ключи "+chunksKeys);
-//            return;
-//        }
-//
-//        System.out.println(existsPlaceholders);
-//
-//        for (String existsPlaceholder : existsPlaceholders) {
-//            getMountPoint(templateText, existsPlaceholder, chunksMap.get("existsPlaceholder"));
-//        }
-
-        System.out.println("------------------------------------");
-
 //        Path absolutePathToRelease = pathToProject.resolve(relativePath);
         Path absolutePathToRelease = templateDirectory.resolve(Paths.get("test2.dart"));
 
@@ -95,6 +75,7 @@ public class FileByTemplateChanger {
         }
 
         System.out.println(existsPlaceholders);
+        System.out.println("------------------------------------");
 
 
 
@@ -118,8 +99,6 @@ public class FileByTemplateChanger {
 
         int insertFromIndex = 0;
 
-//        System.out.println("qqqq");
-//        System.out.println(releaseContextsStorage.getContexts().size());
         for(ReleaseContext releaseContext: releaseContextsStorage.getContexts()) {
 //            PlaceholderContext placeholderContext = releaseContext.getPlaceholderContext();
             //TODO
@@ -143,6 +122,13 @@ public class FileByTemplateChanger {
 
                 if(insertInfo.isTopAttaching()) {
                     replacementText = buildTopReplacementText(placeholderContext, templateText, chunksMap);
+                    int firstLineSize = TextUtilities.getFirstLine(releaseText).length();
+
+//                    if(insertFromIndex < firstLineSize) {
+                    if(insertToIndex < firstLineSize) {
+                        replacementText = replacementText + "\r\n";
+                        replacementText = TextUtilities.trimFirstBreakLine(replacementText);
+                    }
                 }else{
                     String beforeIndexText = releaseText.substring(insertFromIndex, insertToIndex);
                     Pattern pattern = Pattern.compile("\n([ \r\t]*?)$");
@@ -187,10 +173,10 @@ public class FileByTemplateChanger {
 //        int indexToInsert;
 
         if (writerParserRuleContext instanceof TrainingParser.LibraryDefinitionContext) {
-            ClassScopeCalculator classScopeCalculator = new ClassScopeCalculator(readerContext, writerContext);
-            insertInfo = classScopeCalculator.getIndexToInsert();
+            LibraryScopeIndexCalculator libraryScopeCalculator = new LibraryScopeIndexCalculator(readerContext, writerContext);
+            insertInfo = libraryScopeCalculator.getIndexToInsert();
         } else if(writerParserRuleContext instanceof TrainingParser.ClassDefinitionContext) {
-            ClassScopeCalculator classScopeCalculator = new ClassScopeCalculator(readerContext, writerContext);
+            ClassScopeIndexCalculator classScopeCalculator = new ClassScopeIndexCalculator(readerContext, writerContext);
             insertInfo = classScopeCalculator.getIndexToInsert();
 //            indexToInsert = classScopeCalculator.getIndexToInsert().getIndexToInsert();
 
@@ -341,9 +327,6 @@ public class FileByTemplateChanger {
         return parser.compilationUnit();
     }
 
-
-
-
     protected ArrayList<String> getExistsPlaceholders(PlaceholdersContextsStorage placeholdersContextsStorage, HashMap<String, String> chunksMap) {
         ArrayList<String> existsPlaceholders = new ArrayList<>();
         Set<String> chunksKeys = chunksMap.keySet();
@@ -356,21 +339,4 @@ public class FileByTemplateChanger {
 
         return existsPlaceholders;
     }
-
-//    protected ArrayList<String> getExistsPlaceholders(String templateText, HashMap<String, String> chunksMap) {
-//        ArrayList<String> existsPlaceholders = new ArrayList<String>();
-//        Set<String> chunksKeys = chunksMap.keySet();
-//
-//        Pattern pattern = Pattern.compile("#-.+?-#");
-//        Matcher matcher = pattern.matcher(templateText);
-//        while (matcher.find()){
-//            String placeholder = templateText.substring(matcher.start(), matcher.end());
-//            String clearedPlaceholder = ReplacementHelper.getClearedPlaceholder(placeholder);
-//            if(chunksKeys.contains(clearedPlaceholder) && !existsPlaceholders.contains(clearedPlaceholder)) {
-//                existsPlaceholders.add(clearedPlaceholder);
-//            }
-//        }
-//
-//        return existsPlaceholders;
-//    }
 }

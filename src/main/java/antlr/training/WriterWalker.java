@@ -146,6 +146,7 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
 //            ArrayList<Context> templateContexts = templateContextsStorage.getContextByName(placeholderName).getAllContexts();
             PlaceholderContext placeholderContext = templateContextsStorage.getContextByName(placeholderName);
             ArrayList<Context> templatesContexts = placeholderContext.getAllContexts();
+            Collections.reverse(templatesContexts);
             templatesContexts.remove(0);
 //            ParserRuleContext templateParserRuleContext = templateContext.getParserRuleContext();
 
@@ -169,6 +170,11 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
 
                 ParserRuleContext readerParserRuleContext = templatesContexts.get(i).getParserRuleContext();
                 ParserRuleContext writerParserRuleContext = currentContexts.get(i).getParserRuleContext();
+                ////////////////////
+                int readerRuleId = readerParserRuleContext.getRuleIndex();
+                int writerRuleId = writerParserRuleContext.getRuleIndex();
+                ////////////////////
+
                 if(!isEqualParserRuleContexts(readerParserRuleContext, writerParserRuleContext)) {
                     continue templateLoop;
                 }

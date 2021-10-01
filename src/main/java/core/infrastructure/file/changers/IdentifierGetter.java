@@ -1,18 +1,6 @@
 package core.infrastructure.file.changers;
 
 import antlr.training.TrainingParser.*;
-//import antlr.training.TrainingParser.ClassMemberDefinitionContext;
-//import antlr.training.TrainingParser.DeclarationContext;
-//import antlr.training.TrainingParser.MethodSignatureContext;
-//import antlr.training.TrainingParser.PlaceholderLiteralContext;
-//import antlr.training.TrainingParser.IdentifierContext;
-//import antlr.training.TrainingParser.QualifiedContext;
-//import antlr.training.TrainingParser.ConstantConstructorSignatureContext;
-//import antlr.training.TrainingParser.ConstructorSignatureContext;
-//import antlr.training.TrainingParser.GetterSignatureContext;
-//import antlr.training.TrainingParser.SetterSignatureContext;
-//import antlr.training.TrainingParser.OperatorSignatureContext;
-
 import core.infrastructure.helpers.ReplacementHelper;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -28,6 +16,10 @@ public class IdentifierGetter<T extends ParserRuleContext> {
     }
 
     public List<String> get() throws Exception {
+        if(primaryContext instanceof TopLevelDefinitionContext) {
+            return fromTopLevelDefinition((TopLevelDefinitionContext) primaryContext);
+        }
+
         if(primaryContext instanceof ClassMemberDefinitionContext) {
             return fromClassMemberDefinition((ClassMemberDefinitionContext) primaryContext);
         }
@@ -38,6 +30,75 @@ public class IdentifierGetter<T extends ParserRuleContext> {
 
 
         throw new Exception("Идентификатор не найден");
+    }
+
+    /** @link topLevelDefinition */
+    protected List<String> fromTopLevelDefinition(TopLevelDefinitionContext context) {
+        Set<Class> availableContexts = new HashSet<>();
+        Collections.addAll(availableContexts,
+                ClassDefinitionContext.class,
+                EnumTypeContext.class,
+                TypeAliasContext.class,
+                FunctionSignatureContext.class,
+                GetterSignatureContext.class,
+                SetterSignatureContext.class,
+                IdentifierContext.class,
+                StaticFinalDeclarationListContext.class,
+                VariableDeclarationContext.class,
+                PlaceholderLiteralContext.class
+        );
+
+        List<ParseTree> children = context.children;
+        for(ParseTree child: children) {
+            if (!availableContexts.contains(child.getClass())) {
+                continue;
+            }
+
+            if (child instanceof ClassDefinitionContext) {
+                return fromClassDefinition((ClassDefinitionContext) child);
+            }
+
+            if (child instanceof EnumTypeContext) {
+                return fromEnumType((EnumTypeContext) child);
+            }
+
+            if (child instanceof TypeAliasContext) {
+                return fromTypeAlias((TypeAliasContext) child);
+            }
+
+            if (child instanceof FunctionSignatureContext) {
+                return fromFunctionSignature((FunctionSignatureContext) child);
+            }
+
+            if (child instanceof GetterSignatureContext) {
+                return fromGetterSignature((GetterSignatureContext) child);
+            }
+
+            if (child instanceof SetterSignatureContext) {
+                return fromSetterSignature((SetterSignatureContext) child);
+            }
+
+            if (child instanceof IdentifierContext) {
+                return fromIdentifier((IdentifierContext) child);
+            }
+
+            if (child instanceof StaticFinalDeclarationListContext) {
+                return fromStaticFinalDeclarationList((StaticFinalDeclarationListContext) child);
+            }
+
+            if (child instanceof VariableDeclarationContext) {
+                return fromVariableDeclaration((VariableDeclarationContext) child);
+            }
+
+
+            if(child instanceof PlaceholderLiteralContext) {
+                return fromPlaceholderLiteral((PlaceholderLiteralContext) child);
+            }
+
+
+        }
+
+        return new ArrayList<>();
     }
 
     /** @link classMemberDefinition */
@@ -59,6 +120,79 @@ public class IdentifierGetter<T extends ParserRuleContext> {
 
         return new ArrayList<>();
     }
+
+
+    /** @link variableDeclaration */
+    protected List<String> fromVariableDeclaration(VariableDeclarationContext context) {
+        List<ParseTree> children = context.children;
+        ArrayList<String> results = new ArrayList<>();
+        Set<Class> availableContexts = new HashSet<>();
+        Collections.addAll(availableContexts,
+            DeclaredIdentifierContext.class,
+            IdentifierContext.class
+        );
+
+
+        for(ParseTree child: children) {
+            if (!availableContexts.contains(child.getClass())) {
+                continue;
+            }
+
+            if (child instanceof DeclaredIdentifierContext) {
+                results.addAll(fromDeclaredIdentifier((DeclaredIdentifierContext) child));
+                continue;
+            }
+
+            if (child instanceof IdentifierContext) {
+                results.addAll(fromIdentifier((IdentifierContext) child));
+                continue;
+            }
+        }
+
+        return results;
+    }
+
+    /** @link declaredIdentifier */
+    protected List<String> fromDeclaredIdentifier(DeclaredIdentifierContext context) {
+        return fromIdentifier(context.identifier());
+    }
+
+    /** @link typeAlias */
+    protected List<String> fromTypeAlias(TypeAliasContext context) {
+        return fromIdentifier(context.typeAliasBody().functionTypeAlias().functionPrefix().identifier());
+    }
+
+    /** @link classDefinition */
+    protected List<String> fromClassDefinition(ClassDefinitionContext context) {
+        if(context.mixinApplicationClass() != null) {
+            return fromMixinApplicationClass(context.mixinApplicationClass());
+        }
+
+        return fromClassName(context.className());
+    }
+
+    /** @link enumType */
+    protected List<String> fromEnumType(EnumTypeContext context) {
+        return fromClassName(context.className());
+    }
+
+    /** @link importScope */
+    protected List<String> fromImportScope(ImportScopeContext context) {
+        return toArray(context.getText());
+    }
+
+//    /** @link importOrExport */
+//    protected List<String> fromImportOrExport(ImportOrExportContext context) {
+////        return toArray(context.getText());
+//        List<ParseTree> children = context.children;
+//        if(context.libraryExport() != null) {
+//
+//        }
+//
+//
+//    }
+
+
 
     /** @link declaration */
     protected List<String> fromDeclaration(DeclarationContext context) {
@@ -268,6 +402,18 @@ public class IdentifierGetter<T extends ParserRuleContext> {
 
         return result;
     }
+
+    /** @link className */
+    protected List<String> fromClassName(ClassNameContext context) {
+        return toArray(context.getText());
+    }
+
+    /** @link mixinApplicationClass */
+    protected List<String> fromMixinApplicationClass(MixinApplicationClassContext context) {
+        return fromClassName(context.className());
+    }
+
+
 
 //    protected String firstFromIdentifier(IdentifierContext context) {
 //        return fromIdentifier(context).get(0);

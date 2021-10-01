@@ -12,9 +12,12 @@ import org.antlr.v4.runtime.ParserRuleContext;
 
 import java.util.*;
 
-public abstract class ScopeCalculator<T extends ParserRuleContext, I extends ParserRuleContext> extends InsertIndexCalculator {
-    public ScopeCalculator(PlaceholderContext readerContext, ReleaseContext writerContext) {
+public abstract class ScopeIndexCalculator<T extends ParserRuleContext, I extends ParserRuleContext> extends InsertIndexCalculator {
+    protected Class<I> classI;
+
+    public ScopeIndexCalculator(PlaceholderContext readerContext, ReleaseContext writerContext, Class<I> classI) {
         super(readerContext, writerContext);
+        this.classI = classI;
     }
 
     @Override
@@ -43,8 +46,8 @@ public abstract class ScopeCalculator<T extends ParserRuleContext, I extends Par
         List<String> reversedWriterIdentifiers = new ArrayList<>(writerIdentifiers);
         Collections.reverse(reversedWriterIdentifiers);
 
-        System.out.println(beforePlaceholderIdentifiers);
-        System.out.println(afterPlaceholderIdentifiers);
+//        System.out.println(beforePlaceholderIdentifiers);
+//        System.out.println(afterPlaceholderIdentifiers);
 
         InsertInfo insertInfo = new InsertInfo();
 
@@ -212,7 +215,9 @@ public abstract class ScopeCalculator<T extends ParserRuleContext, I extends Par
     private List<I> getMemberDefinitionContexts(T classDefinitionContext) {
         List<I> memberDefinitionContexts = new ArrayList<>();
         classDefinitionContext.children.forEach(ruleContext -> {
-            if(ruleContext instanceof ClassMemberDefinitionContext) {
+//            if(ruleContext instanceof ClassMemberDefinitionContext ) {
+//            if(ruleContext instanceof I) {
+            if(ruleContext.getClass().isAssignableFrom(classI)) {
                 memberDefinitionContexts.add((I) ruleContext);
             }
         });
