@@ -33,4 +33,9 @@ public class ClassScopeIndexCalculator extends ScopeIndexCalculator<ClassDefinit
     protected int getCloseScopeIndex(ClassDefinitionContext writerContext) {
         return writerContext.closeFigureBracket().getStart().getStartIndex();
     }
+
+    @Override
+    protected ParseTree getPlaceholderLiteralContext(ClassMemberDefinitionContext context) {
+        return context.children.get(0);
+    }
 }

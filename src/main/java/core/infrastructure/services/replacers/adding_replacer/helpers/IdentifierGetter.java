@@ -1,4 +1,4 @@
-package core.infrastructure.services.replacers.adding_replacer;
+package core.infrastructure.services.replacers.adding_replacer.helpers;
 
 import antlr.training.TrainingParser.*;
 import core.infrastructure.helpers.ReplacementHelper;
@@ -38,6 +38,15 @@ public class IdentifierGetter<T extends ParserRuleContext> {
 
         if(primaryContext instanceof PlaceholderLiteralContext) {
             return fromPlaceholderLiteral((PlaceholderLiteralContext) primaryContext);
+        }
+
+
+        if(primaryContext instanceof MethodSignatureContext) {
+            return fromMethodSignature((MethodSignatureContext) primaryContext);
+        }
+
+        if(primaryContext instanceof FunctionSignatureContext) {
+            return fromFunctionSignature((FunctionSignatureContext) primaryContext);
         }
 
 
@@ -138,11 +147,21 @@ public class IdentifierGetter<T extends ParserRuleContext> {
         return fromNonLabledStatment(context.nonLabledStatment());
     }
 
+    /** @link block */
+    protected List<String> fromBlock(BlockContext context) {
+        if(context.placeholderLiteral() != null) {
+            return fromPlaceholderLiteral(context.placeholderLiteral());
+        }
+
+        return new ArrayList<>();
+    }
+
     //TODO
     /** @link nonLabledStatment */
     protected List<String> fromNonLabledStatment(NonLabledStatmentContext context) {
         Set<Class> availableContexts = new HashSet<>();
         Collections.addAll(availableContexts,
+                BlockContext.class,
                 LocalVariableDeclarationContext.class,
                 ForStatementContext.class,
                 WhileStatementContext.class,
@@ -174,6 +193,10 @@ public class IdentifierGetter<T extends ParserRuleContext> {
         for(ParseTree child: children) {
             if (!availableContexts.contains(child.getClass())) {
                 continue;
+            }
+
+            if (child instanceof BlockContext) {
+                return fromBlock((BlockContext) child);
             }
 
             if (child instanceof LocalVariableDeclarationContext) {

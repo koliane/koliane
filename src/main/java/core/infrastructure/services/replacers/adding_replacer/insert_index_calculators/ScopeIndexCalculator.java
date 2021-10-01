@@ -4,7 +4,7 @@ import antlr.training.TrainingParser.PlaceholderLiteralContext;
 import core.infrastructure.services.replacers.adding_replacer.contexts.Placeholder;
 import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholderContext;
 import core.infrastructure.services.replacers.adding_replacer.contexts.ReleaseContext;
-import core.infrastructure.services.replacers.adding_replacer.IdentifierGetter;
+import core.infrastructure.services.replacers.adding_replacer.helpers.IdentifierGetter;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -248,7 +248,9 @@ public abstract class ScopeIndexCalculator<T extends ParserRuleContext, I extend
             String identifier = pair.getKey();
             I context = pair.getValue();
 
-            if(context.children.get(0) instanceof PlaceholderLiteralContext) {
+//            if(context.children.get(0) instanceof PlaceholderLiteralContext) {
+            ParseTree possiblePlaceholderLiteral = getPlaceholderLiteralContext(context);
+            if(possiblePlaceholderLiteral != null && getPlaceholderLiteralContext(context) instanceof PlaceholderLiteralContext) {
                 isBefore = false;
                 continue;
             }
@@ -280,4 +282,12 @@ public abstract class ScopeIndexCalculator<T extends ParserRuleContext, I extend
     abstract protected T getReaderParserRuleContext(PlaceholderContext readerContext);
     abstract protected int getOpenScopeIndex(T writerContext);
     abstract protected int getCloseScopeIndex(T writerContext);
+//    abstract protected PlaceholderLiteralContext getPlaceholderLiteralContext(I context);
+
+    /**
+     *
+     * @param context
+     * @return возможное нахождение PlaceholderLiteralContext
+     */
+    abstract protected ParseTree getPlaceholderLiteralContext(I context);
 }

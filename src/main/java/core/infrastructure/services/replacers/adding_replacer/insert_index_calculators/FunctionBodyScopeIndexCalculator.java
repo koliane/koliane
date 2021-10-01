@@ -17,7 +17,7 @@ public class FunctionBodyScopeIndexCalculator extends ScopeIndexCalculator<Funct
 
     @Override
     protected List<ParseTree> getItems(FunctionBodyContext writerContext) {
-        List<ParseTree> children = writerContext.block().statements().children;
+//        List<ParseTree> children = writerContext.block().statements().children;
 //        if(children == null) {
 //            children =
 //        }
@@ -43,5 +43,10 @@ public class FunctionBodyScopeIndexCalculator extends ScopeIndexCalculator<Funct
     @Override
     protected int getCloseScopeIndex(FunctionBodyContext writerContext) {
         return writerContext.block().closeFigureBracket().getStart().getStartIndex();
+    }
+
+    @Override
+    protected ParseTree getPlaceholderLiteralContext(StatementContext context) {
+        return context.getChild(0).getChild(0).getChild(0);
     }
 }

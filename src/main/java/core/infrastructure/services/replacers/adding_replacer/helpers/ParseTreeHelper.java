@@ -1,4 +1,4 @@
-package core.infrastructure.services.replacers.adding_replacer;
+package core.infrastructure.services.replacers.adding_replacer.helpers;
 
 import antlr.training.TrainingParser;
 import antlr.training.TrainingParser.IdentifierContext;

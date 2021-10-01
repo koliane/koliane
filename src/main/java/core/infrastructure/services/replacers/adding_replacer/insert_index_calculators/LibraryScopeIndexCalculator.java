@@ -1,5 +1,6 @@
 package core.infrastructure.services.replacers.adding_replacer.insert_index_calculators;
 
+import antlr.training.TrainingParser;
 import antlr.training.TrainingParser.LibraryDefinitionContext;
 import antlr.training.TrainingParser.TopLevelDefinitionContext;
 import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholderContext;
@@ -32,5 +33,10 @@ public class LibraryScopeIndexCalculator extends ScopeIndexCalculator<LibraryDef
     @Override
     protected int getCloseScopeIndex(LibraryDefinitionContext writerContext) {
         return writerContext.getStop().getStopIndex() + 1;
+    }
+
+    @Override
+    protected ParseTree getPlaceholderLiteralContext(TopLevelDefinitionContext context) {
+        return context.children.get(0);
     }
 }

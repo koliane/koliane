@@ -3,8 +3,10 @@ package core.infrastructure.services.replacers.adding_replacer.walkers;
 import antlr.training.TrainingParser;
 import core.infrastructure.helpers.ReplacementHelper;
 import core.infrastructure.services.replacers.adding_replacer.contexts.*;
+import core.infrastructure.services.replacers.adding_replacer.helpers.NameGetter;
 import org.antlr.v4.runtime.ParserRuleContext;
 
+import java.sql.Array;
 import java.util.*;
 
 public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseContext> {
@@ -155,7 +157,7 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
             if (templateRulesIds.size() != currentRulesIds.size()) {
                 continue;
             }
-            System.out.println("YOOOOOOOOO");
+//            System.out.println("YOOOOOOOOO");
 
 //            System.out.println(templateRulesIds);
 //            System.out.println(templateParserRuleContext.getRuleIndex());
@@ -172,8 +174,8 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
                 ParserRuleContext readerParserRuleContext = templatesContexts.get(i).getParserRuleContext();
                 ParserRuleContext writerParserRuleContext = currentContexts.get(i).getParserRuleContext();
                 ////////////////////
-                int readerRuleId = readerParserRuleContext.getRuleIndex();
-                int writerRuleId = writerParserRuleContext.getRuleIndex();
+//                int readerRuleId = readerParserRuleContext.getRuleIndex();
+//                int writerRuleId = writerParserRuleContext.getRuleIndex();
                 ////////////////////
 
                 if(!isEqualParserRuleContexts(readerParserRuleContext, writerParserRuleContext)) {
@@ -213,36 +215,96 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
         return currentContext;
     }
 
-    public boolean isEqualParserRuleContexts(ParserRuleContext readerCtx, ParserRuleContext writerCtx) {
+    /**
+     * Проверяем, одинаковы ли имена у классов/функций...
+     * @param readerCtx
+     * @param writerCtx
+     * @return
+     */
+    public boolean isEqualParserRuleContexts(ParserRuleContext readerCtx, ParserRuleContext writerCtx) throws Exception {
         int ruleId = readerCtx.getRuleIndex();
-//        System.out.println(ruleId);
-//        System.out.println(writerCtx.getRuleIndex());
-        if(ruleId == TrainingParser.RULE_classDefinition) {
-            TrainingParser.ClassDefinitionContext realReaderCtx = (TrainingParser.ClassDefinitionContext) readerCtx;
-            TrainingParser.ClassDefinitionContext realWriterCtx = (TrainingParser.ClassDefinitionContext) writerCtx;
-            String readerClassName = realReaderCtx.className().getText();
-            String writerClassName = realWriterCtx.className().getText();
+        List<Integer> rulesIdsForCheck = new ArrayList<>();
+        Collections.addAll(rulesIdsForCheck,
+                TrainingParser.RULE_classDefinition,
+                TrainingParser.RULE_functionBody
+        );
 
-            if(ReplacementHelper.isPlaceholder(readerClassName)) {
-                return true;
+        if(!rulesIdsForCheck.contains(ruleId)) {
+            return true;
+        }
+
+        NameGetter readerNameGetter = new NameGetter(readerCtx);
+        NameGetter writerNameGetter = new NameGetter(writerCtx);
+
+        String readerName = readerNameGetter.get();
+        String writerName = writerNameGetter.get();
+
+//        switch (ruleId){
+//            case TrainingParser.RULE_classDefinition:
+//                readerName = ((TrainingParser.ClassDefinitionContext) readerCtx).className().getText();
+//                writerName = ((TrainingParser.ClassDefinitionContext) writerCtx).className().getText();
+//                break;
+//            case TrainingParser.RULE_functionBody:
+//                readerName = ((TrainingParser.ClassDefinitionContext) readerCtx).className().getText();
+//                writerName = ((TrainingParser.ClassDefinitionContext) writerCtx).className().getText();
+//                break;
+//            default:
+//                throw new IllegalStateException("Unexpected value: " + ruleId);
+//        }
+
+//        TrainingParser.ClassDefinitionContext realReaderCtx = (TrainingParser.ClassDefinitionContext) readerCtx;
+//        TrainingParser.ClassDefinitionContext realWriterCtx = (TrainingParser.ClassDefinitionContext) writerCtx;
+//        String readerClassName = realReaderCtx.className().getText();
+//        String writerClassName = realWriterCtx.className().getText();
+
+        if(ReplacementHelper.isPlaceholder(readerName)) {
+            return true;
+        }
+
+        if(!readerName.equals(writerName)) {
+            if(!ReplacementHelper.hasPlaceholder(readerName)) {
+                return false;
             }
 
-            if(!readerClassName.equals(writerClassName)) {
-                if(!ReplacementHelper.hasPlaceholder(readerClassName)) {
-                    return false;
-                }
+            String beforePlaceholderText = ReplacementHelper.getBeforePlaceholderText(readerName);
+            String afterPlaceholderText = ReplacementHelper.getAfterPlaceholderText(readerName);
 
-                String beforePlaceholderText = ReplacementHelper.getBeforePlaceholderText(readerClassName);
-                String afterPlaceholderText = ReplacementHelper.getAfterPlaceholderText(readerClassName);
-
-                if(
-                    beforePlaceholderText.length() > 0 && !writerClassName.startsWith(beforePlaceholderText)
-                    || afterPlaceholderText.length() > 0 && !writerClassName.endsWith(afterPlaceholderText)
-                ) {
-                    return false;
-                }
+            if(
+                beforePlaceholderText.length() > 0 && !writerName.startsWith(beforePlaceholderText)
+                || afterPlaceholderText.length() > 0 && !writerName.endsWith(afterPlaceholderText)
+            ) {
+                return false;
             }
         }
+
+//        System.out.println(ruleId);
+//        System.out.println(writerCtx.getRuleIndex());
+//        if(ruleId == TrainingParser.RULE_classDefinition) {
+//            TrainingParser.ClassDefinitionContext realReaderCtx = (TrainingParser.ClassDefinitionContext) readerCtx;
+//            TrainingParser.ClassDefinitionContext realWriterCtx = (TrainingParser.ClassDefinitionContext) writerCtx;
+//            String readerClassName = realReaderCtx.className().getText();
+//            String writerClassName = realWriterCtx.className().getText();
+//
+//            if(ReplacementHelper.isPlaceholder(readerClassName)) {
+//                return true;
+//            }
+//
+//            if(!readerClassName.equals(writerClassName)) {
+//                if(!ReplacementHelper.hasPlaceholder(readerClassName)) {
+//                    return false;
+//                }
+//
+//                String beforePlaceholderText = ReplacementHelper.getBeforePlaceholderText(readerClassName);
+//                String afterPlaceholderText = ReplacementHelper.getAfterPlaceholderText(readerClassName);
+//
+//                if(
+//                    beforePlaceholderText.length() > 0 && !writerClassName.startsWith(beforePlaceholderText)
+//                    || afterPlaceholderText.length() > 0 && !writerClassName.endsWith(afterPlaceholderText)
+//                ) {
+//                    return false;
+//                }
+//            }
+//        }
 
         return true;
     }
