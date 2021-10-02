@@ -18,6 +18,10 @@ public class ReaderWalker extends BaseWalker<PlaceholdersContextsStorage, Placeh
 
     @Override
     public void enterEveryRule(ParserRuleContext ctx) {
+//        if(getAvailableContextRules().contains(ctx.getRuleIndex())) {
+//            System.out.println("Reader enterEveryRule");
+//        }
+
         if(isContextRule(ctx)) {
             currentContext = createNewContext(ctx);
         }

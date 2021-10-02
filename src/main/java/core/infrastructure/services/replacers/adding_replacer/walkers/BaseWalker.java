@@ -6,20 +6,18 @@ import core.infrastructure.services.replacers.adding_replacer.contexts.Context;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.Interval;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public abstract class BaseWalker<S, C> extends TrainingBaseListener {
     static protected final Integer[] contextRules = {
             TrainingParser.RULE_libraryDefinition,
 
             TrainingParser.RULE_classDefinition,
-//            TrainingParser.RULE_methodSignature,
-//            TrainingParser.RULE_functionExpression,
-//            TrainingParser.RULE_localFunctionDeclaration,
             TrainingParser.RULE_functionBody,
             TrainingParser.RULE_switchStatement,
             TrainingParser.RULE_mapLiteral,
             TrainingParser.RULE_listLiteral,
+            TrainingParser.RULE_block,
             TrainingParser.RULE_placeholderLiteral,
     };
 
@@ -29,6 +27,7 @@ public abstract class BaseWalker<S, C> extends TrainingBaseListener {
             TrainingParser.RULE_switchStatement,
             TrainingParser.RULE_mapLiteral,
             TrainingParser.RULE_listLiteral,
+            TrainingParser.RULE_block,
     };
 
     protected Context rootContext = new Context();
@@ -49,6 +48,7 @@ public abstract class BaseWalker<S, C> extends TrainingBaseListener {
     @Override
     public void exitEveryRule(ParserRuleContext ctx) {
         if(isContextRule(ctx)) {
+//            System.out.println("Exit "+ctx.getRuleIndex());
             currentContext = currentContext.getParent();
         }
     }
@@ -59,12 +59,31 @@ public abstract class BaseWalker<S, C> extends TrainingBaseListener {
         if(!getAvailableContextRules().contains(ruleIndex)) {
             return false;
         }
+
+        if(ctx instanceof TrainingParser.BlockContext) {
+            Set<Class> availableBlockContexts = new HashSet<>();
+            Collections.addAll(availableBlockContexts,
+                TrainingParser.IfStatementContext.class
+            );
+            ParserRuleContext ancestor = ctx.getParent().getParent().getParent();
+
+//            if(ancestor instanceof TrainingParser.IfStatementContext) {
+//                System.out.println("IfStatementContext");
+//            }
+
+            if(!availableBlockContexts.contains(ancestor.getClass())) {
+                return false;
+            }
+
+        }
+
         if(ruleIndex == TrainingParser.RULE_placeholderLiteral) {
 
             if(ctx.getParent().getRuleIndex() == TrainingParser.RULE_className) {
                 return false;
             }
         }
+//        System.out.println(ruleIndex);
 
         return true;
     }

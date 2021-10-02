@@ -59,6 +59,10 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
 
     @Override
     public void enterEveryRule(ParserRuleContext ctx) {
+//        if(getAvailableContextRules().contains(ctx.getRuleIndex())) {
+//            System.out.println("Writer enterEveryRule");
+//        }
+
         if(!isContextRule(ctx)) {
             return;
         }

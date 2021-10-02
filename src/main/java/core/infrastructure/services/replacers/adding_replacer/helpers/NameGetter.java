@@ -38,6 +38,10 @@ public class NameGetter {
             return fromListLiteral((ListLiteralContext) primaryContext);
         }
 
+        if(primaryContext instanceof BlockContext) {
+            return fromBlock((BlockContext) primaryContext);
+        }
+
         throw new Exception("Нет подходящего обработчика для контекста " + primaryContext.getClass());
     }
 
@@ -119,5 +123,32 @@ public class NameGetter {
         IdentifierGetter<ParserRuleContext> identifierGetter = new IdentifierGetter<>((ParserRuleContext) ancestor);
 
         return identifierGetter.get().get(0);
+    }
+
+    /** @link block */
+    private String fromBlock(BlockContext context) throws Exception {
+        ParserRuleContext possibleValuableContext = context.getParent().getParent().getParent();
+        ParserRuleContext possibleValuableStatement = context.getParent().getParent();
+        if(possibleValuableContext instanceof IfStatementContext) {
+            IfStatementContext preparedPossibleValuableContext = (IfStatementContext) possibleValuableContext;
+            List<ParseTree> children = possibleValuableContext.children;
+            int n = children.size();
+            for(int i=0; i < n; i++) {
+                ParseTree child = children.get(i);
+                if(child == possibleValuableStatement) {
+                    if(children.get(i-1).getText().equals("else")) {
+                        return "else" + preparedPossibleValuableContext.expression().getText();
+                    }
+                }
+            }
+
+//            IdentifierGetter<IfStatementContext> identifierGetter = new IdentifierGetter(possibleValuableContext);
+//            System.out.println(identifierGetter.get().get(0));
+//            return identifierGetter.get().get(0);
+
+            return preparedPossibleValuableContext.expression().getText();
+        }
+
+        throw new Exception("Не найдено имя для " + context.getClass());
     }
 }

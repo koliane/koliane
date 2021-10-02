@@ -132,7 +132,11 @@ public class AddingReplacer extends BaseReplacer {
 
         } else if(writerParserRuleContext instanceof TrainingParser.ListLiteralContext) {
             calculator = new ArrayScopeIndexCalculator(readerContext, writerContext);
+
+        } else if(writerParserRuleContext instanceof TrainingParser.BlockContext) {
+            calculator = new BlockScopeIndexCalculator(readerContext, writerContext);
         }
+
 
         if(calculator == null) {
             insertInfo = new InsertInfo();

@@ -70,6 +70,10 @@ public class IdentifierGetter<T extends ParserRuleContext> {
             return fromExpression((ExpressionContext) primaryContext);
         }
 
+        if(primaryContext instanceof IfStatementContext) {
+            return fromIfStatement((IfStatementContext) primaryContext);
+        }
+
 
         System.out.println(primaryContext.getClass());
         throw new Exception("Идентификатор не найден для класса "+primaryContext.getClass());
