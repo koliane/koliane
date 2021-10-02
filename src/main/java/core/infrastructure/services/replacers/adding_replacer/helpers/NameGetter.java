@@ -128,10 +128,10 @@ public class NameGetter {
     /** @link block */
     private String fromBlock(BlockContext context) throws Exception {
         ParserRuleContext possibleValuableContext = context.getParent().getParent().getParent();
-        ParserRuleContext possibleValuableStatement = context.getParent().getParent();
 
         if(possibleValuableContext instanceof IfStatementContext) {
             IfStatementContext preparedPossibleValuableContext = (IfStatementContext) possibleValuableContext;
+            ParserRuleContext possibleValuableStatement = context.getParent().getParent();
             List<ParseTree> children = possibleValuableContext.children;
             int n = children.size();
             for(int i=0; i < n; i++) {
@@ -157,29 +157,14 @@ public class NameGetter {
             return identifierGetter.get().get(0);
         }
 
-//        if(possibleValuableContext instanceof ForStatementContext) {
-//            ForStatementContext preparedPossibleValuableContext = (ForStatementContext) possibleValuableContext;
-//            IdentifierGetter<ForStatementContext> identifierGetter = new IdentifierGetter(preparedPossibleValuableContext);
-//            System.out.println(identifierGetter.get().get(0));
-//
-//            return identifierGetter.get().get(0);
-//        }
-//
-//        if(possibleValuableContext instanceof WhileStatementContext) {
-//            WhileStatementContext preparedPossibleValuableContext = (WhileStatementContext) possibleValuableContext;
-//            IdentifierGetter<WhileStatementContext> identifierGetter = new IdentifierGetter(preparedPossibleValuableContext);
-//            System.out.println(identifierGetter.get().get(0));
-//
-//            return identifierGetter.get().get(0);
-//        }
-//
-//        if(possibleValuableContext instanceof DoStatementContext) {
-//            DoStatementContext preparedPossibleValuableContext = (DoStatementContext) possibleValuableContext;
-//            IdentifierGetter<DoStatementContext> identifierGetter = new IdentifierGetter(preparedPossibleValuableContext);
-//            System.out.println(identifierGetter.get().get(0));
-//
-//            return identifierGetter.get().get(0);
-//        }
+        possibleValuableContext = context.getParent();
+        if(possibleValuableContext instanceof TryStatementContext) {
+            IdentifierGetter<ParserRuleContext> identifierGetter = new IdentifierGetter<>(possibleValuableContext);
+            System.out.println(identifierGetter.get().get(0));
+
+            return identifierGetter.get().get(0);
+        }
+
 
         throw new Exception("Не найдено имя для " + context.getClass());
     }
