@@ -1,6 +1,7 @@
 package core.infrastructure.services.replacers.adding_replacer.helpers;
 
 import antlr.training.TrainingParser.*;
+import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -103,22 +104,19 @@ public class NameGetter {
 
     /** @link mapLiteral */
     private String fromMapLiteral(MapLiteralContext context) throws Exception {
-        List<Class> types = new ArrayList<>();
-        Collections.addAll(types,
-            InitializedVariableDeclarationContext.class,
-            NamedArgumentContext.class
-        );
-        RuleContext ancestor = ParseTreeHelper.findAncestor(context, types);
-        IdentifierGetter<ParserRuleContext> identifierGetter = new IdentifierGetter<>((ParserRuleContext) ancestor);
-
-        return identifierGetter.get().get(0);
+        return fromCollectionLiteral(context);
     }
 
     /** @link listLiteral */
     private String fromListLiteral(ListLiteralContext context) throws Exception {
+        return fromCollectionLiteral(context);
+    }
+
+    private String fromCollectionLiteral(ParserRuleContext context) throws Exception {
         List<Class> types = new ArrayList<>();
         Collections.addAll(types,
-                InitializedVariableDeclarationContext.class
+                InitializedVariableDeclarationContext.class,
+                NamedArgumentContext.class
         );
         RuleContext ancestor = ParseTreeHelper.findAncestor(context, types);
         IdentifierGetter<ParserRuleContext> identifierGetter = new IdentifierGetter<>((ParserRuleContext) ancestor);
