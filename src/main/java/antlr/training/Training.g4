@@ -108,7 +108,8 @@ optionalFormalParameters
   | namedFormalParameters
   ;
 optionalPositionalFormalParameters
-  : '[' defaultFormalParameter (',' defaultFormalParameter)* ','? ']'
+//  : '[' defaultFormalParameter (',' defaultFormalParameter)* ','? ']'
+  : openSquareBracket defaultFormalParameter (',' defaultFormalParameter)* ','? closeSquareBracket
   ;
 namedFormalParameters
 //  : '{' defaultNamedParameter (',' defaultNamedParameter)* ','? '}'
@@ -416,7 +417,8 @@ symbolLiteral
   ;
 // 16.7 Lists
 listLiteral
-  : 'const'? typeArguments? '[' (expressionList ','?)? ']'
+//  : 'const'? typeArguments? '[' (expressionList ','?)? ']'
+  : 'const'? typeArguments? openSquareBracket (expressionList ','?)? closeSquareBracket
   ;
 
 // 16.8 Maps
@@ -426,8 +428,9 @@ mapLiteral
     openFigureBracket (mapLiteralEntry (',' mapLiteralEntry)* ','?)? closeFigureBracket
 ;
 mapLiteralEntry
-  : expression ':' expression
-  | placeholderLiteral
+//  : expression ':' expression
+  : placeholderLiteral
+  | expression ':' expression
   ;
 
 // 16.9 Throw
@@ -475,7 +478,8 @@ cascadeSection
          (assignmentOperator expressionWithoutCascade)?
   ;
 cascadeSelector
-  : '[' expression ']'
+//  : '[' expression ']'
+  : openSquareBracket expression closeSquareBracket
   | identifier
   ;
 argumentPart
@@ -647,7 +651,8 @@ assignableExpression
   | 'super' unconditionalAssignableSelector identifier
   ;
 unconditionalAssignableSelector
-  : '[' expression ']'
+//  : '[' expression ']'
+  : openSquareBracket expression closeSquareBracket
   | '.' identifier
   ;
 assignableSelector
@@ -1023,8 +1028,14 @@ StringWithPlaceholder: [a-zA-Z0-9]* PlaceholderString [a-zA-Z0-9]*;
 OPEN_FIGURE_BRACKET: '{';
 CLOSE_FIGURE_BRACKET: '}';
 
+OPEN_SQUARE_BRACKET: '[';
+CLOSE_SQUARE_BRACKET: ']';
+
 openFigureBracket: OPEN_FIGURE_BRACKET;
 closeFigureBracket: CLOSE_FIGURE_BRACKET;
+
+openSquareBracket: OPEN_SQUARE_BRACKET;
+closeSquareBracket: CLOSE_SQUARE_BRACKET;
 
 className: identifier | placeholderLiteral | stringWithPlaceholderLiteral;
 importScope: scriptTag? libraryName? importOrExport* partDirective*;

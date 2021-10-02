@@ -27,40 +27,17 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
     @Override
     protected Context createNewContext(ParserRuleContext ctx) throws Exception {
         Context newContext;
-//        ArrayList<Integer> currentRulesIds = currentContext.getAllContextsRulesIds();
-//        currentRulesIds.add(ctx.getRuleIndex());
-
         ArrayList<PlaceholderContext> placeholdersContexts = getMatchPlaceholdersContexts(ctx);
         boolean hasFullMatch = !placeholdersContexts.isEmpty();
 
-//        PlaceholderContext placeholderContext;
-//        boolean isFullMatch;
-//        try {
-//
-////            placeholderContext = getFirstMatchTemplateContext(ctx);
-//            isFullMatch = true;
-//        }catch (Exception e){
-////            e.printStackTrace();
-//            placeholderContext = null;
-//            isFullMatch = false;
-//        }
-
-//        if(isFullMatches(currentRulesIds)) {
-//            PlaceholderContext placeholderContext = getFirstMatchTemplateContext(currentRulesIds);
-//        if(isFullMatch){
         if(hasFullMatch){
             newContext = new ReleaseContext(placeholdersContexts);
-//            newContext = new ReleaseContext(placeholderContext);
             contextsStorage.add((ReleaseContext) newContext);
         } else {
             newContext = new Context();
         }
 
         fillNewContext(newContext, ctx);
-
-//        newContext.setParent(currentContext);
-//        currentContext.addChild(newContext);
-//        newContext.setParserRuleContext(ctx);
 
         return newContext;
     }
@@ -88,9 +65,6 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
 
         try {
             currentContext = createNewContext(ctx);
-//            if(currentContext instanceof ReleaseContext) {
-//                System.out.println(ctx.getStart().getCharPositionInLine());
-//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,12 +83,8 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
         if(currentDepthLevel > 0) {
             currentDepthLevel--;
         }
-
-
-//        System.out.println("RuleIndex = "+ctx.getRuleIndex());
     }
 
-//    protected PlaceholderContext getFirstMatchTemplateContext(ParserRuleContext ctx) throws Exception {
     protected ArrayList<PlaceholderContext> getMatchPlaceholdersContexts(ParserRuleContext ctx) throws Exception {
         ArrayList<PlaceholderContext> arResult = new ArrayList<>();
         ArrayList<Context> currentContexts = currentContext.getAllContexts();
@@ -127,10 +97,6 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
 
         ArrayList<Integer> currentRulesIds = new ArrayList<>();
         for(Context context: currentContexts){
-//            if(context.getParent() == null) {
-//                continue;
-//            }
-
             currentRulesIds.add(context.getParserRuleContext().getRuleIndex());
         }
 
@@ -194,18 +160,6 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
 
     }
 
-//    protected boolean isFullMatches(ArrayList<Integer> currentRulesIds) {
-//        boolean status;
-//        try {
-//            getFirstMatchTemplateContext(currentRulesIds);
-//            status = true;
-//        } catch (Exception e) {
-//            status = false;
-//        }
-//
-//        return status;
-//    }
-
     protected void clearPlaceholderRuleId(ArrayList<Integer> list){
         list.removeIf(value -> value == TrainingParser.RULE_placeholderLiteral);
 
@@ -223,12 +177,15 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
      */
     public boolean isEqualParserRuleContexts(ParserRuleContext readerCtx, ParserRuleContext writerCtx) throws Exception {
         int ruleId = readerCtx.getRuleIndex();
-        List<Integer> rulesIdsForCheck = new ArrayList<>();
-        Collections.addAll(rulesIdsForCheck,
-                TrainingParser.RULE_classDefinition,
-                TrainingParser.RULE_functionBody,
-                TrainingParser.RULE_switchStatement
-        );
+//        List<Integer> rulesIdsForCheck = new ArrayList<>();
+//        Collections.addAll(rulesIdsForCheck,
+//                TrainingParser.RULE_classDefinition,
+//                TrainingParser.RULE_functionBody,
+//                TrainingParser.RULE_switchStatement,
+//                TrainingParser.RULE_mapLiteral
+//        );
+        List<Integer> rulesIdsForCheck = new ArrayList<>(Arrays.asList(BaseWalker.checkNameRules));
+
 
         if(!rulesIdsForCheck.contains(ruleId)) {
             return true;

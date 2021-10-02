@@ -113,25 +113,31 @@ public class AddingReplacer extends BaseReplacer {
     private InsertInfo getIndexToInsert(PlaceholderContext readerContext, ReleaseContext writerContext) throws Exception {
         ParserRuleContext writerParserRuleContext = writerContext.getParserRuleContext();
         InsertInfo insertInfo;
+        InsertIndexCalculator calculator = null;
 
         if (writerParserRuleContext instanceof TrainingParser.LibraryDefinitionContext) {
-            LibraryScopeIndexCalculator calculator = new LibraryScopeIndexCalculator(readerContext, writerContext);
-            insertInfo = calculator.getIndexToInsert();
+            calculator = new LibraryScopeIndexCalculator(readerContext, writerContext);
 
         } else if(writerParserRuleContext instanceof TrainingParser.ClassDefinitionContext) {
-            ClassScopeIndexCalculator calculator = new ClassScopeIndexCalculator(readerContext, writerContext);
-            insertInfo = calculator.getIndexToInsert();
+            calculator = new ClassScopeIndexCalculator(readerContext, writerContext);
 
         } else if(writerParserRuleContext instanceof TrainingParser.FunctionBodyContext) {
-            FunctionBodyScopeIndexCalculator calculator = new FunctionBodyScopeIndexCalculator(readerContext, writerContext);
-            insertInfo = calculator.getIndexToInsert();
+            calculator = new FunctionBodyScopeIndexCalculator(readerContext, writerContext);
 
         } else if(writerParserRuleContext instanceof TrainingParser.SwitchStatementContext) {
-            SwitchScopeIndexCalculator calculator = new SwitchScopeIndexCalculator(readerContext, writerContext);
-            insertInfo = calculator.getIndexToInsert();
+            calculator = new SwitchScopeIndexCalculator(readerContext, writerContext);
 
-        } else {
+        } else if(writerParserRuleContext instanceof TrainingParser.MapLiteralContext) {
+            calculator = new MapScopeIndexCalculator(readerContext, writerContext);
+
+        } else if(writerParserRuleContext instanceof TrainingParser.ListLiteralContext) {
+            calculator = new ArrayScopeIndexCalculator(readerContext, writerContext);
+        }
+
+        if(calculator == null) {
             insertInfo = new InsertInfo();
+        } else {
+            insertInfo = calculator.getIndexToInsert();
         }
 
         return insertInfo;

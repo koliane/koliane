@@ -18,7 +18,17 @@ public abstract class BaseWalker<S, C> extends TrainingBaseListener {
 //            TrainingParser.RULE_localFunctionDeclaration,
             TrainingParser.RULE_functionBody,
             TrainingParser.RULE_switchStatement,
+            TrainingParser.RULE_mapLiteral,
+            TrainingParser.RULE_listLiteral,
             TrainingParser.RULE_placeholderLiteral,
+    };
+
+    static protected final Integer[] checkNameRules = {
+            TrainingParser.RULE_classDefinition,
+            TrainingParser.RULE_functionBody,
+            TrainingParser.RULE_switchStatement,
+            TrainingParser.RULE_mapLiteral,
+            TrainingParser.RULE_listLiteral,
     };
 
     protected Context rootContext = new Context();

@@ -2,9 +2,11 @@ package core.infrastructure.services.replacers.adding_replacer.helpers;
 
 import antlr.training.TrainingParser.*;
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 //public class NameGetter<T extends ParserRuleContext> {
@@ -26,6 +28,14 @@ public class NameGetter {
 
         if(primaryContext instanceof SwitchStatementContext) {
             return fromSwitchStatement((SwitchStatementContext) primaryContext);
+        }
+
+        if(primaryContext instanceof MapLiteralContext) {
+            return fromMapLiteral((MapLiteralContext) primaryContext);
+        }
+
+        if(primaryContext instanceof ListLiteralContext) {
+            return fromListLiteral((ListLiteralContext) primaryContext);
         }
 
         throw new Exception("Нет подходящего обработчика для контекста " + primaryContext.getClass());
@@ -83,6 +93,30 @@ public class NameGetter {
     /** @link switchStatement */
     private String fromSwitchStatement(SwitchStatementContext context) throws Exception {
         IdentifierGetter<ParserRuleContext> identifierGetter = new IdentifierGetter<>((ParserRuleContext) context);
+
+        return identifierGetter.get().get(0);
+    }
+
+    /** @link mapLiteral */
+    private String fromMapLiteral(MapLiteralContext context) throws Exception {
+        List<Class> types = new ArrayList<>();
+        Collections.addAll(types,
+            InitializedVariableDeclarationContext.class
+        );
+        RuleContext ancestor = ParseTreeHelper.findAncestor(context, types);
+        IdentifierGetter<ParserRuleContext> identifierGetter = new IdentifierGetter<>((ParserRuleContext) ancestor);
+
+        return identifierGetter.get().get(0);
+    }
+
+    /** @link listLiteral */
+    private String fromListLiteral(ListLiteralContext context) throws Exception {
+        List<Class> types = new ArrayList<>();
+        Collections.addAll(types,
+                InitializedVariableDeclarationContext.class
+        );
+        RuleContext ancestor = ParseTreeHelper.findAncestor(context, types);
+        IdentifierGetter<ParserRuleContext> identifierGetter = new IdentifierGetter<>((ParserRuleContext) ancestor);
 
         return identifierGetter.get().get(0);
     }

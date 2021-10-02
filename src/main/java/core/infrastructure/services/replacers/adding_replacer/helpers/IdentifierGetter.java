@@ -57,9 +57,22 @@ public class IdentifierGetter<T extends ParserRuleContext> {
             return fromSwitchCase((SwitchCaseContext) primaryContext);
         }
 
+        if(primaryContext instanceof InitializedVariableDeclarationContext) {
+            System.out.println(fromInitializedVariableDeclaration((InitializedVariableDeclarationContext) primaryContext));
+            return fromInitializedVariableDeclaration((InitializedVariableDeclarationContext) primaryContext);
+        }
+
+        if(primaryContext instanceof MapLiteralEntryContext) {
+            return fromMapLiteralEntry((MapLiteralEntryContext) primaryContext);
+        }
+
+        if(primaryContext instanceof ExpressionContext) {
+            return fromExpression((ExpressionContext) primaryContext);
+        }
+
 
         System.out.println(primaryContext.getClass());
-        throw new Exception("Идентификатор не найден");
+        throw new Exception("Идентификатор не найден для класса "+primaryContext.getClass());
     }
 
     /** @link topLevelDefinition */
@@ -423,6 +436,21 @@ public class IdentifierGetter<T extends ParserRuleContext> {
     protected List<String> fromLocalFunctionDeclaration(LocalFunctionDeclarationContext context) {
         return fromFunctionSignature(context.functionSignature());
     }
+
+    /** @link mapLiteralEntry */
+    protected List<String> fromMapLiteralEntry(MapLiteralEntryContext context) {
+        if(context.placeholderLiteral() != null) {
+            return fromPlaceholderLiteral(context.placeholderLiteral());
+        }
+        return toArray(context.expression(0).getText());
+    }
+
+    /** @link expression */
+    protected List<String> fromExpression(ExpressionContext context) {
+        return toArray(context.getText());
+    }
+
+
 
 
 

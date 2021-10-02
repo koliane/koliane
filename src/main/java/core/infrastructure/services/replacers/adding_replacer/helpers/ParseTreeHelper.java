@@ -3,6 +3,8 @@ package core.infrastructure.services.replacers.adding_replacer.helpers;
 import antlr.training.TrainingParser;
 import antlr.training.TrainingParser.IdentifierContext;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.lang.reflect.Type;
@@ -48,5 +50,19 @@ public class ParseTreeHelper {
 
     public static IdentifierContext findIdentifier(List<ParseTree> contexts) {
         return findContext(contexts, IdentifierContext.class);
+    }
+
+    public static RuleContext findAncestor(RuleContext context, List<Class> types) throws Exception {
+        if(context.parent == null) {
+            throw new Exception("Предок с типами " +types+ " не найден");
+        }
+
+        for(Class type: types){
+            if(context.parent.getClass() == type) {
+                return context.parent;
+            }
+        }
+
+        return findAncestor(context.parent, types);
     }
 }
