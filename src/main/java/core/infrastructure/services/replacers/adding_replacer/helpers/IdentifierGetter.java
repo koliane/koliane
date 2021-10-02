@@ -74,6 +74,18 @@ public class IdentifierGetter<T extends ParserRuleContext> {
             return fromIfStatement((IfStatementContext) primaryContext);
         }
 
+        if(primaryContext instanceof ForStatementContext) {
+            return fromForStatement((ForStatementContext) primaryContext);
+        }
+
+        if(primaryContext instanceof WhileStatementContext) {
+            return fromWhileStatement((WhileStatementContext) primaryContext);
+        }
+
+        if(primaryContext instanceof DoStatementContext) {
+            return fromDoStatement((DoStatementContext) primaryContext);
+        }
+
 
         System.out.println(primaryContext.getClass());
         throw new Exception("Идентификатор не найден для класса "+primaryContext.getClass());

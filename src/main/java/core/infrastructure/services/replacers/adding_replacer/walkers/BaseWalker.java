@@ -30,6 +30,13 @@ public abstract class BaseWalker<S, C> extends TrainingBaseListener {
             TrainingParser.RULE_block,
     };
 
+    static protected final Class[] availableBlockContexts = {
+        TrainingParser.IfStatementContext.class,
+        TrainingParser.ForStatementContext.class,
+        TrainingParser.WhileStatementContext.class,
+        TrainingParser.DoStatementContext.class
+    };
+
     protected Context rootContext = new Context();
     protected Context currentContext = rootContext;
     protected S contextsStorage;
@@ -61,17 +68,22 @@ public abstract class BaseWalker<S, C> extends TrainingBaseListener {
         }
 
         if(ctx instanceof TrainingParser.BlockContext) {
-            Set<Class> availableBlockContexts = new HashSet<>();
-            Collections.addAll(availableBlockContexts,
-                TrainingParser.IfStatementContext.class
-            );
+//            Set<Class> availableBlockContexts = new HashSet<>();
+//            Collections.addAll(availableBlockContexts,
+//                TrainingParser.IfStatementContext.class,
+//                TrainingParser.ForStatementContext.class
+//            );
+            List<Class> availableBlockContextsList = new ArrayList<>(Arrays.asList(BaseWalker.availableBlockContexts));
+
+
             ParserRuleContext ancestor = ctx.getParent().getParent().getParent();
 
 //            if(ancestor instanceof TrainingParser.IfStatementContext) {
 //                System.out.println("IfStatementContext");
 //            }
 
-            if(!availableBlockContexts.contains(ancestor.getClass())) {
+//            if(!availableBlockContexts.contains(ancestor.getClass())) {
+            if(!availableBlockContextsList.contains(ancestor.getClass())) {
                 return false;
             }
 
