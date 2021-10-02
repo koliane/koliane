@@ -105,7 +105,8 @@ public class NameGetter {
     private String fromMapLiteral(MapLiteralContext context) throws Exception {
         List<Class> types = new ArrayList<>();
         Collections.addAll(types,
-            InitializedVariableDeclarationContext.class
+            InitializedVariableDeclarationContext.class,
+            NamedArgumentContext.class
         );
         RuleContext ancestor = ParseTreeHelper.findAncestor(context, types);
         IdentifierGetter<ParserRuleContext> identifierGetter = new IdentifierGetter<>((ParserRuleContext) ancestor);

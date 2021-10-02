@@ -90,6 +90,10 @@ public class IdentifierGetter<T extends ParserRuleContext> {
             return fromTryStatement((TryStatementContext) primaryContext);
         }
 
+        if(primaryContext instanceof NamedArgumentContext) {
+            return fromNamedArgument((NamedArgumentContext) primaryContext);
+        }
+
 
         System.out.println(primaryContext.getClass());
         throw new Exception("Идентификатор не найден для класса "+primaryContext.getClass());
@@ -420,6 +424,16 @@ public class IdentifierGetter<T extends ParserRuleContext> {
     /** @link breakStatement */
     protected List<String> fromBreakStatement(BreakStatementContext context) {
         return toArray(context.getText());
+    }
+
+    /** @link namedArgument */
+    protected List<String> fromNamedArgument(NamedArgumentContext context) {
+        return fromLabel(context.label());
+    }
+
+    /** @link label */
+    protected List<String> fromLabel(LabelContext context) {
+        return fromIdentifier(context.identifier());
     }
 
     /** @link continueStatement */

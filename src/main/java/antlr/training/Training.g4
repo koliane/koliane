@@ -84,7 +84,7 @@ returnType
   ;
 
 functionBody
-  : 'async'? '=>' expression ';'
+  : 'async'? '=>' expression ';'?
   | ('async' | 'async*' | 'sync*')? block
   ;
 block
@@ -707,6 +707,7 @@ nonLabledStatment
   | expressionStatement
   | assertStatement
   | localFunctionDeclaration
+//  | functionExpression
   ;
 
 // 17.2 Expression Statements
