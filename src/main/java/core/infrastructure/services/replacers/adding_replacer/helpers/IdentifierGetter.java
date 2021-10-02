@@ -49,7 +49,16 @@ public class IdentifierGetter<T extends ParserRuleContext> {
             return fromFunctionSignature((FunctionSignatureContext) primaryContext);
         }
 
+        if(primaryContext instanceof SwitchStatementContext) {
+            return fromSwitchStatement((SwitchStatementContext) primaryContext);
+        }
 
+        if(primaryContext instanceof SwitchCaseContext) {
+            return fromSwitchCase((SwitchCaseContext) primaryContext);
+        }
+
+
+        System.out.println(primaryContext.getClass());
         throw new Exception("Идентификатор не найден");
     }
 
@@ -178,15 +187,6 @@ public class IdentifierGetter<T extends ParserRuleContext> {
                 ExpressionStatementContext.class,
                 AssertStatementContext.class,
                 LocalFunctionDeclarationContext.class
-
-//                TypeAliasContext.class,
-//                FunctionSignatureContext.class,
-//                GetterSignatureContext.class,
-//                SetterSignatureContext.class,
-//                IdentifierContext.class,
-//                StaticFinalDeclarationListContext.class,
-//                VariableDeclarationContext.class,
-//                PlaceholderLiteralContext.class
         );
 
         List<ParseTree> children = context.children;
@@ -286,6 +286,18 @@ public class IdentifierGetter<T extends ParserRuleContext> {
     /** @link switchStatement */
     protected List<String> fromSwitchStatement(SwitchStatementContext context) {
         return toArray(SWITCH_STATEMENT_PREFIX + context.expression().getText());
+    }
+
+    /** @link switchCase */
+    protected List<String> fromSwitchCase(SwitchCaseContext context) {
+        if(context.placeholderLiteral() != null) {
+            return fromPlaceholderLiteral(context.placeholderLiteral());
+        }
+
+        List<LabelContext> labels = ParseTreeHelper.filterByParserRuleContext(context.children, LabelContext.class);
+
+
+        return toArray(labels + context.expression().getText());
     }
 
     /** @link ifStatement */
@@ -686,7 +698,7 @@ public class IdentifierGetter<T extends ParserRuleContext> {
     /** @link staticFinalDeclarationList */
     protected List<String> fromStaticFinalDeclarationList(StaticFinalDeclarationListContext context) {
         List<ParseTree> children = context.children;
-        ArrayList<String> results = new ArrayList<>();
+        List<String> results = new ArrayList<>();
         List<StaticFinalDeclarationContext> resultContexts = ParseTreeHelper.filterByParserRuleContext(children, StaticFinalDeclarationContext.class);
 
         for(StaticFinalDeclarationContext resultContext: resultContexts) {

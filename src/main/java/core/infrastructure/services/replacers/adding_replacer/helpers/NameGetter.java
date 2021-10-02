@@ -24,6 +24,10 @@ public class NameGetter {
             return fromFunctionBody((FunctionBodyContext) primaryContext);
         }
 
+        if(primaryContext instanceof SwitchStatementContext) {
+            return fromSwitchStatement((SwitchStatementContext) primaryContext);
+        }
+
         throw new Exception("Нет подходящего обработчика для контекста " + primaryContext.getClass());
     }
 
@@ -74,5 +78,12 @@ public class NameGetter {
         }
 
         throw new Exception("Не обработанный случай");
+    }
+
+    /** @link switchStatement */
+    private String fromSwitchStatement(SwitchStatementContext context) throws Exception {
+        IdentifierGetter<ParserRuleContext> identifierGetter = new IdentifierGetter<>((ParserRuleContext) context);
+
+        return identifierGetter.get().get(0);
     }
 }

@@ -1,6 +1,6 @@
 package core.infrastructure.services.replacers.adding_replacer;
 
-import core.infrastructure.services.replacers.adding_replacer.insert_index_calculators.FunctionBodyScopeIndexCalculator;
+import core.infrastructure.services.replacers.adding_replacer.insert_index_calculators.*;
 import core.infrastructure.services.replacers.adding_replacer.walkers.ReaderWalker;
 import antlr.training.TrainingLexer;
 import antlr.training.TrainingParser;
@@ -9,9 +9,6 @@ import core.infrastructure.services.replacers.adding_replacer.contexts.Placehold
 import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholdersContextsStorage;
 import core.infrastructure.services.replacers.adding_replacer.contexts.ReleaseContext;
 import core.infrastructure.services.replacers.adding_replacer.contexts.ReleaseContextsStorage;
-import core.infrastructure.services.replacers.adding_replacer.insert_index_calculators.ClassScopeIndexCalculator;
-import core.infrastructure.services.replacers.adding_replacer.insert_index_calculators.InsertInfo;
-import core.infrastructure.services.replacers.adding_replacer.insert_index_calculators.LibraryScopeIndexCalculator;
 import core.infrastructure.services.replacers.BaseReplacer;
 import core.infrastructure.utils.TextUtilities;
 import org.antlr.v4.runtime.CharStreams;
@@ -118,16 +115,20 @@ public class AddingReplacer extends BaseReplacer {
         InsertInfo insertInfo;
 
         if (writerParserRuleContext instanceof TrainingParser.LibraryDefinitionContext) {
-            LibraryScopeIndexCalculator libraryScopeCalculator = new LibraryScopeIndexCalculator(readerContext, writerContext);
-            insertInfo = libraryScopeCalculator.getIndexToInsert();
+            LibraryScopeIndexCalculator calculator = new LibraryScopeIndexCalculator(readerContext, writerContext);
+            insertInfo = calculator.getIndexToInsert();
 
         } else if(writerParserRuleContext instanceof TrainingParser.ClassDefinitionContext) {
-            ClassScopeIndexCalculator classScopeCalculator = new ClassScopeIndexCalculator(readerContext, writerContext);
-            insertInfo = classScopeCalculator.getIndexToInsert();
+            ClassScopeIndexCalculator calculator = new ClassScopeIndexCalculator(readerContext, writerContext);
+            insertInfo = calculator.getIndexToInsert();
 
         } else if(writerParserRuleContext instanceof TrainingParser.FunctionBodyContext) {
-            FunctionBodyScopeIndexCalculator classScopeCalculator = new FunctionBodyScopeIndexCalculator(readerContext, writerContext);
-            insertInfo = classScopeCalculator.getIndexToInsert();
+            FunctionBodyScopeIndexCalculator calculator = new FunctionBodyScopeIndexCalculator(readerContext, writerContext);
+            insertInfo = calculator.getIndexToInsert();
+
+        } else if(writerParserRuleContext instanceof TrainingParser.SwitchStatementContext) {
+            SwitchScopeIndexCalculator calculator = new SwitchScopeIndexCalculator(readerContext, writerContext);
+            insertInfo = calculator.getIndexToInsert();
 
         } else {
             insertInfo = new InsertInfo();

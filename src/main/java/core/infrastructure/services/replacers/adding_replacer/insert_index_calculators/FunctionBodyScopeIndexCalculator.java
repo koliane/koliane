@@ -17,10 +17,6 @@ public class FunctionBodyScopeIndexCalculator extends ScopeIndexCalculator<Funct
 
     @Override
     protected List<ParseTree> getItems(FunctionBodyContext writerContext) {
-//        List<ParseTree> children = writerContext.block().statements().children;
-//        if(children == null) {
-//            children =
-//        }
         return writerContext.block().statements().children;
     }
 

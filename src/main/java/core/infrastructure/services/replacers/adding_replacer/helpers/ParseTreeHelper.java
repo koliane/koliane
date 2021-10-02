@@ -11,8 +11,8 @@ import java.util.List;
 
 public class ParseTreeHelper {
 
-    public static <T extends ParseTree> ArrayList<T> filterByParserRuleContext  (List<ParseTree> contexts, Class<T> classType) {
-        ArrayList<T> result = new ArrayList<>();
+    public static <T extends ParseTree> List<T> filterByParserRuleContext  (List<ParseTree> contexts, Class<T> classType) {
+        List<T> result = new ArrayList<>();
 
         for(ParseTree context: contexts) {
             if(context.getClass().isAssignableFrom(classType)) {

@@ -17,6 +17,7 @@ public abstract class BaseWalker<S, C> extends TrainingBaseListener {
 //            TrainingParser.RULE_functionExpression,
 //            TrainingParser.RULE_localFunctionDeclaration,
             TrainingParser.RULE_functionBody,
+            TrainingParser.RULE_switchStatement,
             TrainingParser.RULE_placeholderLiteral,
     };
 
@@ -50,18 +51,12 @@ public abstract class BaseWalker<S, C> extends TrainingBaseListener {
         }
         if(ruleIndex == TrainingParser.RULE_placeholderLiteral) {
 
-//            int[] availableParentRules = {TrainingParser.RULE_classDefinition, TrainingParser.RULE_className};
-//            if({TrainingParser.RULE_classDefinition}.co) {
-//            if(ctx.getParent().getRuleIndex() == TrainingParser.RULE_classDefinition) {
-
-
             if(ctx.getParent().getRuleIndex() == TrainingParser.RULE_className) {
                 return false;
             }
         }
 
         return true;
-//        return getAvailableContextRules().contains(ruleIndex);
     }
 
     protected String getFullText(ParserRuleContext ctx) {

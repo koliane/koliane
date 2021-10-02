@@ -751,7 +751,10 @@ switchStatement
   : 'switch'  '(' expression ')' openFigureBracket switchCase* defaultCase? closeFigureBracket
   ;
 switchCase
-  : label* 'case' expression ':' statements
+//  : label* 'case' expression ':' statements
+  :
+  placeholderLiteral
+  | label* 'case' expression ':' statements
   ;
 defaultCase
   : label* 'default' ':' statements
