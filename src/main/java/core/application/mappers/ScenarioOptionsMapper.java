@@ -2,6 +2,7 @@ package core.application.mappers;
 
 import core.infrastructure.helpers.PathHelper;
 import core.infrastructure.helpers.ReplacementHelper;
+import core.infrastructure.helpers.placeholder.CodePlaceholderHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,10 +23,12 @@ public class ScenarioOptionsMapper extends BaseOptionsMapper implements GetMapBy
     }
 
     private String getChunkResultText(String templateText, HashMap<String, String> optionsMap) {
+        CodePlaceholderHelper codePlaceholderHelper = new CodePlaceholderHelper();
         for(HashMap.Entry<String, String> pair: optionsMap.entrySet()) {
             String key = pair.getKey();
             String optionValue = pair.getValue();
-            String replacementWord = ReplacementHelper.getReplacementWord(key);
+//            String replacementWord = ReplacementHelper.getReplacementWord(key);
+            String replacementWord = codePlaceholderHelper.buildPlaceholder(key);
             templateText = templateText.replaceAll(replacementWord, optionValue);
         }
 
@@ -49,7 +52,7 @@ as#-PROJECT_NAME-#df
 
     /**
      *
-     * @param pathToTemplate
+     * @param relativePath
      * @param map - map, по которой заменяются ключи в chunks файле
      * @return
      */
@@ -61,7 +64,6 @@ as#-PROJECT_NAME-#df
 
         Path fileName = pathToTemplate.getFileName();
         Path pathToDirectory = pathToTemplate.getParent();
-        System.out.println(pathToTemplate);
         Path pathToChunks = Paths.get(
                 pathToDirectory.toString(),
                 ReplacementHelper.getChunksDirectoryName(fileName.toString()),
@@ -81,8 +83,9 @@ as#-PROJECT_NAME-#df
 
         for (int i = 0; i < n; i++) {
             String line = lines.get(i);
-            boolean isChunkAlias = line.trim().startsWith(ReplacementHelper.ALIAS_PREFIX)
-                    && line.trim().endsWith(ReplacementHelper.ALIAS_POSTFIX);
+//            boolean isChunkAlias = line.trim().startsWith(ReplacementHelper.ALIAS_PREFIX)
+//                    && line.trim().endsWith(ReplacementHelper.ALIAS_POSTFIX);
+            boolean isChunkAlias = (new CodePlaceholderHelper()).isPlaceholder(line.trim());
 
             if(isChunkAlias) {
                 if(templateText.length() > 0) {
@@ -96,8 +99,9 @@ as#-PROJECT_NAME-#df
 
 
                 chunkAlias = line;
-                chunkAlias = chunkAlias.trim().replaceAll(ReplacementHelper.ALIAS_PREFIX, "");
-                chunkAlias = chunkAlias.trim().replaceAll(ReplacementHelper.ALIAS_POSTFIX, "");
+//                chunkAlias = chunkAlias.trim().replaceAll(ReplacementHelper.ALIAS_PREFIX, "");
+//                chunkAlias = chunkAlias.trim().replaceAll(ReplacementHelper.ALIAS_POSTFIX, "");
+                chunkAlias = (new CodePlaceholderHelper()).getClearedPlaceholder(chunkAlias.trim());
 
                 continue;
             }

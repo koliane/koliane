@@ -1,8 +1,11 @@
 package core.infrastructure.file.creators;
 
 import core.application.mappers.OptionsMapper;
+import core.infrastructure.file.FileByTemplateAction;
 import core.infrastructure.helpers.PathHelper;
 import core.infrastructure.helpers.ReplacementHelper;
+import core.infrastructure.helpers.placeholder.CodePlaceholderHelper;
+import core.infrastructure.helpers.placeholder.FilePlaceholderHelper;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -11,14 +14,12 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class FileByTemplateCreator {
-    protected final OptionsMapper optionsMapper;
-    protected final Path pathToProject;
-
-    public FileByTemplateCreator(Path pathToProject, OptionsMapper optionsMapper) {
-        this.pathToProject = pathToProject;
-        this.optionsMapper = optionsMapper;
+public class FileByTemplateCreator extends FileByTemplateAction {
+    public FileByTemplateCreator(Path pathToProject, Path pathToTemplateProject, Map <String, String> options) {
+        super(pathToProject, pathToTemplateProject, options);
     }
 
     public void forceCreate(String relativePath) throws Exception {
@@ -30,7 +31,14 @@ public class FileByTemplateCreator {
     }
 
     public void create(String relativePath, boolean isForced) throws Exception {
-        Path absolutePathToCreate = pathToProject.resolve(relativePath);
+        String relativeProjectPath = relativePath;
+        FilePlaceholderHelper filePlaceholderHelper = new FilePlaceholderHelper();
+        if(filePlaceholderHelper.hasPlaceholder(relativePath)) {
+            validatePathWithPlaceholders(relativePath);
+            relativeProjectPath = filePlaceholderHelper.replaceAllPlaceholdersToSnakeCase(relativeProjectPath, options);
+        }
+
+        Path absolutePathToCreate = pathToProject.resolve(relativeProjectPath);
         File file = absolutePathToCreate.toFile();
         boolean isPathToDirectory = isPathToDirectory(absolutePathToCreate);
         boolean isPathToFile = !isPathToDirectory;
@@ -62,7 +70,7 @@ public class FileByTemplateCreator {
             return;
         }
 
-        createFile(Paths.get(relativePath));
+        createFile(Paths.get(relativeProjectPath), Paths.get(relativePath));
     }
 
     public boolean isPathToDirectory(Path path) {
@@ -83,27 +91,19 @@ public class FileByTemplateCreator {
         }
     }
 
-    protected void createFile(Path relativePath) throws Exception {
+    protected void createFile(Path relativePath, Path relativeTemplatePath) throws Exception {
         Path absolutePathToCreate = pathToProject.resolve(relativePath);
-        Path templateDirectory = PathHelper.getDefaultTemplateDirectory();
-        Path pathToTemplateFile = templateDirectory.resolve(relativePath);
+        Path pathToTemplateFile = pathToTemplateProject.resolve(relativeTemplatePath);
         File templateFile = pathToTemplateFile.toFile();
 
         if(!templateFile.exists()) {
-            throw new NoSuchFileException("Нет шаблона для файла: " + relativePath.toString());
+            throw new NoSuchFileException("Нет шаблона для файла: " + relativeTemplatePath);
         }
 
         String templateText = new String(Files.readAllBytes(pathToTemplateFile), StandardCharsets.UTF_8);
-
-        HashMap<String, String> optionsMap = optionsMapper.getMap();
-        for(HashMap.Entry<String, String> pair: optionsMap.entrySet()) {
-            String key = pair.getKey();
-            String optionValue = pair.getValue();
-
-//            templateText = templateText.replaceAll("#-"+key+"-#", optionValue);
-            String replacementWord = ReplacementHelper.getReplacementWord(key);
-            templateText = templateText.replaceAll(replacementWord, optionValue);
-        }
+        CodePlaceholderHelper codePlaceholderHelper = new CodePlaceholderHelper();
+        templateText = codePlaceholderHelper.replaceAllPlaceholders(templateText, options);
+        templateText = codePlaceholderHelper.deleteUnusedPlaceholders(templateText, options);
 
         Files.createFile(absolutePathToCreate);
         Files.write(absolutePathToCreate, templateText.getBytes(StandardCharsets.UTF_8));

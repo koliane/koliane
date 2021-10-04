@@ -1,6 +1,7 @@
 package core.infrastructure.services.replacers.adding_replacer.walkers;
 
 import antlr.training.TrainingParser;
+import core.infrastructure.helpers.placeholder.CodePlaceholderHelper;
 import core.infrastructure.services.replacers.adding_replacer.contexts.Context;
 import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholderContext;
 import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholdersContextsStorage;
@@ -33,7 +34,8 @@ public class ReaderWalker extends BaseWalker<PlaceholdersContextsStorage, Placeh
         Context newContext;
 
         if(ruleIndex == TrainingParser.RULE_placeholderLiteral) {
-            String placeholderName = ReplacementHelper.getClearedPlaceholder(ctx.getText());
+//            String placeholderName = ReplacementHelper.getClearedPlaceholder(ctx.getText());
+            String placeholderName = (new CodePlaceholderHelper()).getClearedPlaceholder(ctx.getText());
             newContext = new PlaceholderContext(placeholderName);
             //TODO тут вероятно нужно реализовать копирование
             contextsStorage.add((PlaceholderContext) newContext);

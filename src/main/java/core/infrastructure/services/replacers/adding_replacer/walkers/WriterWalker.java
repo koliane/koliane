@@ -2,6 +2,7 @@ package core.infrastructure.services.replacers.adding_replacer.walkers;
 
 import antlr.training.TrainingParser;
 import core.infrastructure.helpers.ReplacementHelper;
+import core.infrastructure.helpers.placeholder.CodePlaceholderHelper;
 import core.infrastructure.services.replacers.adding_replacer.contexts.*;
 import core.infrastructure.services.replacers.adding_replacer.helpers.NameGetter;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -201,17 +202,22 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
         String readerName = readerNameGetter.get();
         String writerName = writerNameGetter.get();
 
-        if(ReplacementHelper.isPlaceholder(readerName)) {
+//        if(ReplacementHelper.isPlaceholder(readerName)) {
+        if((new CodePlaceholderHelper()).isPlaceholder(readerName)) {
             return true;
         }
 
         if(!readerName.equals(writerName)) {
-            if(!ReplacementHelper.hasPlaceholder(readerName)) {
+//            if(!ReplacementHelper.hasPlaceholder(readerName)) {
+            if(!(new CodePlaceholderHelper()).hasPlaceholder(readerName)) {
                 return false;
             }
 
-            String beforePlaceholderText = ReplacementHelper.getBeforePlaceholderText(readerName);
-            String afterPlaceholderText = ReplacementHelper.getAfterPlaceholderText(readerName);
+//            String beforePlaceholderText = ReplacementHelper.getBeforePlaceholderText(readerName);
+//            String afterPlaceholderText = ReplacementHelper.getAfterPlaceholderText(readerName);
+
+            String beforePlaceholderText = (new CodePlaceholderHelper()).getBeforePlaceholderText(readerName);
+            String afterPlaceholderText = (new CodePlaceholderHelper()).getAfterPlaceholderText(readerName);
 
             if(
                 beforePlaceholderText.length() > 0 && !writerName.startsWith(beforePlaceholderText)

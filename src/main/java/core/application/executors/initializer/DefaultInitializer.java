@@ -152,20 +152,20 @@ public class DefaultInitializer extends BaseInitializer {
     }
 
     private boolean init() throws Exception {
-        FileByTemplateCreator fileByTemplateCreator = new FileByTemplateCreator(pathToProject, optionsMapper);
-        boolean isForce = command.isForceMode();
-        boolean isOnlyPubspecForceMode = command.isOnlyPubspecForceMode();
-
-        int n = paths.length;
-        for(int i=0; i < n; i++) {
-            String strPath = paths[i];
-            if(isForce || isOnlyPubspecForceMode && strPath.equals(pathToPubspec)) {
-                fileByTemplateCreator.forceCreate(strPath);
-            } else {
-                fileByTemplateCreator.softCreate(strPath);
-
-            }
-        }
+//        FileByTemplateCreator fileByTemplateCreator = new FileByTemplateCreator(pathToProject, optionsMapper);
+//        boolean isForce = command.isForceMode();
+//        boolean isOnlyPubspecForceMode = command.isOnlyPubspecForceMode();
+//
+//        int n = paths.length;
+//        for(int i=0; i < n; i++) {
+//            String strPath = paths[i];
+//            if(isForce || isOnlyPubspecForceMode && strPath.equals(pathToPubspec)) {
+//                fileByTemplateCreator.forceCreate(strPath);
+//            } else {
+//                fileByTemplateCreator.softCreate(strPath);
+//
+//            }
+//        }
         return true;
     }
 

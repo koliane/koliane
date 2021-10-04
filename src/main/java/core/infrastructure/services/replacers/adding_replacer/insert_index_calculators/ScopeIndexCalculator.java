@@ -24,7 +24,6 @@ public abstract class ScopeIndexCalculator<T extends ParserRuleContext, I extend
 //        ParserRuleContext readerParserRuleContext = readerContext.getParserRuleContext().getParent().getParent();
         ParserRuleContext readerParserRuleContext = getReaderParserRuleContext(readerContext);
         ParserRuleContext writerParserRuleContext = writerContext.getParserRuleContext();
-        System.out.println(readerParserRuleContext.getClass());
 
         T readerClassDefinitionContext = (T) readerParserRuleContext;
         T writerClassDefinitionContext = (T) writerParserRuleContext;

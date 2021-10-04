@@ -2,6 +2,7 @@ package core.infrastructure.services.replacers.adding_replacer.helpers;
 
 import antlr.training.TrainingParser.*;
 import core.infrastructure.helpers.ReplacementHelper;
+import core.infrastructure.helpers.placeholder.CodePlaceholderHelper;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -58,7 +59,6 @@ public class IdentifierGetter<T extends ParserRuleContext> {
         }
 
         if(primaryContext instanceof InitializedVariableDeclarationContext) {
-            System.out.println(fromInitializedVariableDeclaration((InitializedVariableDeclarationContext) primaryContext));
             return fromInitializedVariableDeclaration((InitializedVariableDeclarationContext) primaryContext);
         }
 
@@ -95,7 +95,6 @@ public class IdentifierGetter<T extends ParserRuleContext> {
         }
 
 
-        System.out.println(primaryContext.getClass());
         throw new Exception("Идентификатор не найден для класса "+primaryContext.getClass());
     }
 
@@ -795,7 +794,9 @@ public class IdentifierGetter<T extends ParserRuleContext> {
 
     /** @link placeholderLiteral */
     protected List<String> fromPlaceholderLiteral(PlaceholderLiteralContext context) {
-        return toArray(ReplacementHelper.getClearedPlaceholder(context.getText()));
+        String clearedPlaceholder = (new CodePlaceholderHelper()).getClearedPlaceholder(context.getText());
+//        return toArray(ReplacementHelper.getClearedPlaceholder(context.getText()));
+        return toArray(clearedPlaceholder);
     }
 
     /** @link identifier */

@@ -1,0 +1,134 @@
+path_to_template_project: "D:/projects/java/koliane/src/main/resources/default/"
+#anchor_file_name: pubspec.yaml
+#check_anchor: true
+#chunks_directory_postfix: _chunks
+commands:
+  add_entity:
+    create: [
+#        lib/core/domain/entities/__entity_name__/model/__entity_name__.dart
+#        lib/core/domain/entities/__ENTITY_NAME__/repository/__ENTITY_NAME___repository.dart
+#        lib/core/domain/entities/__ENTITY_NAME__/repository/__ENTITY_NAME___service.dart
+    ]
+    update: [
+
+    ]
+  add_entity_method:
+    update: [
+      lib/core/domain/entities/__entity_name__/model/__entity_name__.dart
+    ]
+
+  init:
+    help: Инициализация проекта
+    create: [
+#        "pubspec.yaml",
+#        "lib/main.dart",
+#
+#        "lib/core/domain/ports",
+#        "lib/core/domain/entities/skeleton/port",
+#        "lib/core/domain/entities/skeleton/collection/base_collection.dart",
+#        "lib/core/domain/entities/skeleton/model/base_model.dart",
+#        "lib/core/domain/entities/skeleton/repository/base_repository.dart",
+#        "lib/core/domain/entities/skeleton/repository/crud_repository.dart",
+#        "lib/core/domain/entities/skeleton/event/base_event.dart",
+#
+#        "lib/core/domain/entities/option/model/bool_option.dart",
+#        "lib/core/domain/entities/option/model/option.dart",
+#        "lib/core/domain/entities/option/port/provider/option_crud_provider_port.dart",
+#        "lib/core/domain/entities/option/repository/option_repository.dart",
+#        "lib/core/domain/entities/option/service/option_service.dart",
+#        "lib/core/domain/entities/option/service/options.dart",
+#        "lib/core/domain/entities/option/service/options_props.dart",
+#
+#        "lib/core/application/bootstrap/di/di_bootstrap.dart",
+#        "lib/core/application/bootstrap/sqlite/sqlite_bootstrap.dart",
+#        "lib/core/application/bootstrap/bootstrap.dart",
+#        "lib/core/application/event_listeners/entities",
+#        "lib/core/application/use_cases",
+#        "lib/core/application/env/env.dart",
+#        "lib/core/application/env/env_enum.dart",
+#        "lib/core/application/env/config.dart",
+#        "lib/core/application/env/dev/dev_config.dart",
+#        "lib/core/application/env/prod/prod_config.dart",
+#
+#        "lib/core/infrastructure/types/rx_value.dart",
+#        "lib/core/infrastructure/types/calculated_rx_value.dart",
+#
+#        "lib/core/infrastructure/di/di.dart",
+#        "lib/core/infrastructure/di/provider_di.dart",
+#
+#        "lib/core/infrastructure/services/filter",
+#
+#        "lib/core/infrastructure/event_dispatching/event.dart",
+#        "lib/core/infrastructure/event_dispatching/event_dispatcher.dart",
+#        "lib/core/infrastructure/event_dispatching/event_listener.dart",
+#        "lib/core/infrastructure/event_dispatching/callback_event_listener.dart",
+#        "lib/core/infrastructure/event_dispatching/one_type_events.dart",
+#
+#
+#        "lib/core/data/clients/skeleton/base_client.dart",
+#        "lib/core/data/clients/api",
+#        "lib/core/data/clients/example",
+#        "lib/core/data/clients/sqlite/sqlite.dart",
+#        "lib/core/data/clients/sqlite/sqlite_client.dart",
+#        "lib/core/data/clients/sqlite/orm/migrations/base_migration.dart",
+#        "lib/core/data/clients/sqlite/orm/migrations/default_migration_strategy.dart",
+#        "lib/core/data/clients/sqlite/orm/migrations/list/init_migration.dart",
+#        "lib/core/data/clients/sqlite/orm/tables/tables.dart",
+#
+#        "lib/core/data/clients/sqlite/orm/sqlite_orm.dart",
+#        "lib/core/data/clients/sqlite/orm/tables/option/option.dart",
+#        "lib/core/data/clients/sqlite/orm/tables/option/option_dao.dart",
+#
+#        "lib/core/data/providers/entities/option/provider/sqlite/option_crud_provider.dart",
+#        "lib/core/data/providers/skeleton/base_provider.dart",
+#        "lib/core/data/providers/skeleton/crud_provider.dart",
+#        "lib/core/data/providers/skeleton/dto/base_dto.dart",
+#        "lib/core/data/providers/skeleton/dto/code_value_dto.dart",
+#        "lib/core/data/providers/skeleton/provider/base_provider.dart",
+#        "lib/core/data/providers/skeleton/request/base_request.dart",
+#        "lib/core/data/providers/skeleton/request/code_request.dart",
+#        "lib/core/data/providers/skeleton/request/code_value_request.dart",
+#        "lib/core/data/providers/skeleton/response/base_response.dart",
+#        "lib/core/data/providers/skeleton/response/list_response.dart",
+#
+#        "lib/core/infrastructure/utils/datetime",
+#        "lib/core/infrastructure/utils/text",
+#        "lib/core/infrastructure/utils/scalar/scalar.dart",
+#        "lib/core/infrastructure/enums/crud_enum.dart",
+#        "lib/core/infrastructure/value_objects/name_code.dart",
+#        "lib/core/infrastructure/value_objects/value_code.dart",
+#        "lib/core/infrastructure/value_objects/value_name_code.dart",
+#        "lib/core/infrastructure/value_objects/process_status/loading_process_status.dart",
+#        "lib/core/infrastructure/value_objects/process_status/loading_status_enum.dart",
+#        "lib/core/infrastructure/value_objects/process_status/process_status.dart",
+#
+#
+#        "lib/state/management/custom/core/skeleton/actions.dart",
+#        "lib/state/management/custom/core/skeleton/getters.dart",
+#        "lib/state/management/custom/core/skeleton/state.dart",
+#        "lib/state/management/custom/core/skeleton/modules.dart",
+#        "lib/state/management/custom/core/skeleton/store.dart",
+#        "lib/state/management/custom/core/classes.dart",
+#        "lib/state/management/custom/modules/app/app_actions.dart",
+#        "lib/state/management/custom/modules/app/app_getters.dart",
+#        "lib/state/management/custom/modules/app/app_modules.dart",
+#        "lib/state/management/custom/modules/app/app_state.dart",
+#        "lib/state/management/custom/modules/app/app_store.dart",
+#        "lib/state/routes/routes.dart",
+#
+#
+#        "lib/ui/widgets/service/multi_stream_builder.dart",
+#        "lib/ui/widgets/base/template",
+#        "lib/ui/widgets/base/wrapper",
+#        "lib/ui/widgets/components/template",
+#        "lib/ui/widgets/components/wrapper",
+#        "lib/ui/widgets/scenes/template",
+#        "lib/ui/widgets/scenes/wrapper",
+#        "lib/ui/widgets/pages/template",
+#        "lib/ui/widgets/pages/wrapper",
+#        "lib/ui/styles/default/color.dart",
+#        "lib/ui/styles/default/theme.dart",
+    ]
+#      - 'lib/core/domain/entities/__NAME__/model/__NAME__.dart'
+    update:
+      - 'lib/core/domain/entities/__NAME__/repository/__NAME__Repository.dart'

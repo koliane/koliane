@@ -151,7 +151,6 @@ public class NameGetter {
                 || possibleValuableContext instanceof DoStatementContext
         ) {
             IdentifierGetter<ParserRuleContext> identifierGetter = new IdentifierGetter<>(possibleValuableContext);
-            System.out.println(identifierGetter.get().get(0));
 
             return identifierGetter.get().get(0);
         }
@@ -159,7 +158,6 @@ public class NameGetter {
         possibleValuableContext = context.getParent();
         if(possibleValuableContext instanceof TryStatementContext) {
             IdentifierGetter<ParserRuleContext> identifierGetter = new IdentifierGetter<>(possibleValuableContext);
-            System.out.println(identifierGetter.get().get(0));
 
             return identifierGetter.get().get(0);
         }

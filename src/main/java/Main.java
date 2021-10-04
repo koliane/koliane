@@ -1,9 +1,28 @@
+import core.application.CommandRequest;
+import core.application.Placeholders;
+import core.application.PubspecYaml;
+import core.application.commands.Command;
+import core.application.commands.specification_command.SpecificationCommand;
+import core.application.executors.specification.SpecificationExecutor;
 import core.application.mappers.AddEntityOptionsMapper;
+import core.application.specifications.Specification;
+import core.infrastructure.config.Params;
 import core.infrastructure.file.changers.FileByTemplateChanger;
 import core.infrastructure.helpers.ReplacementHelper;
+import core.infrastructure.helpers.StringHelper;
+import core.infrastructure.helpers.placeholder.CodePlaceholderHelper;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 //long m = System.currentTimeMillis();
@@ -13,102 +32,28 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        ReplacementHelper.getBeforePlaceholderText("Q#-uii-#zz0");
-        ReplacementHelper.getAfterPlaceholderText("Q#-uii-#zz0");
+//        String pathToChunks = "D:\\projects\\java\\koliane\\src\\main\\resources\\default\\chunks.yaml";
+//        Path path = Paths.get(pathToChunks);
+//        System.out.println(path);
+//        System.out.println(path.getNameCount());
+//        System.out.println(path.getFileName());
+//        System.out.println(path.getParent());
+
+
+
+
+//        Map<String, String> options = new HashMap<>();
+//        options.put("placeholder", "Замена");
+//        options.put("ZZZ", "Замена с запятой");
+//        String text = "/#-placeholder-#/asd#-ZZZ-# , fsdf/sadf";
+//        CodePlaceholderHelper codePlaceholderHelper = new CodePlaceholderHelper();
+//        String newText = codePlaceholderHelper.deleteUnusedPlaceholders(text, options);
+//        System.out.println(text);
+//        System.out.println(newText);
+//        return;
+
 
         /*
-        Path relativePath = Paths.get("test.dart");
-        Path templateDirectory = PathHelper.getDefaultTemplateDirectory();
-        Path pathToTemplateFile = templateDirectory.resolve(relativePath);
-        File templateFile = pathToTemplateFile.toFile();
-
-        if(!templateFile.exists()) {
-            throw new NoSuchFileException("Нет шаблона для файла: " + relativePath.toString());
-        }
-
-        String templateText = new String(Files.readAllBytes(pathToTemplateFile), StandardCharsets.UTF_8);
-
-
-
-        /////////////
-        Path resultRelativePath = Paths.get("test2.dart");
-        Path pathToResultFile = templateDirectory.resolve(resultRelativePath);
-        File resultFile = pathToTemplateFile.toFile();
-        if(!templateFile.exists()) {
-            throw new NoSuchFileException("Нет файла для вывода результата: " + resultRelativePath.toString());
-        }
-        String resultText = new String(Files.readAllBytes(pathToResultFile), StandardCharsets.UTF_8);
-        /////////////
-
-
-//        System.out.println(templateText);
-        System.out.println("-----------------------------------------------------------");
-
-        TrainingLexer lexer = new TrainingLexer(CharStreams.fromString(templateText));
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        TrainingParser parser = new TrainingParser(tokens);
-        ParseTree tree = parser.compilationUnit();
-        ParseTreeWalker walker = new ParseTreeWalker();
-        ReaderWalker templateVisitor = new ReaderWalker();
-        walker.walk(templateVisitor, tree);
-
-        PlaceholdersContextsStorage placeholdersContextsStorage = templateVisitor.getContextsStorage();
-
-        ////////////////////////
-        TrainingLexer resultLexer = new TrainingLexer(CharStreams.fromString(resultText));
-        CommonTokenStream resultTokens = new CommonTokenStream(resultLexer);
-        TrainingParser resultParser = new TrainingParser(resultTokens);
-        ParseTree resultTree = resultParser.compilationUnit();
-        ParseTreeWalker resultWalker = new ParseTreeWalker();
-        WriterWalker resultVisitor = new WriterWalker(placeholdersContextsStorage);
-        resultWalker.walk(resultVisitor, resultTree);
-
-        ReleaseContextsStorage resultContextsStorage = resultVisitor.getContextsStorage();
-        HashMap<String, String> placeholdersMap = new HashMap<>();
-        placeholdersMap.put("FUNC_MOUNT_POINT", "print('zzz');");
-        ////////////////////////
-
-
-        ArrayList<PlaceholderContext> contexts = placeholdersContextsStorage.getContexts();
-        PlaceholderContext firstContext = contexts.get(0);
-        System.out.println("Main");
-//        System.out.println(contexts.size());
-
-//        ArrayList<Context> descendants = firstContext.getDescendants();
-//        ArrayList<Context> nestedContexts = firstContext.getNestedContexts();
-//        System.out.println(descendants.size());
-//        System.out.println(nestedContexts.size());
-
-
-//        System.out.println("template ids= "+firstContext.getNestedRulesIds());
-        System.out.println("all template ids= "+firstContext.getAllContextsRulesIds());
-
-        //////////////////////////////////
-        ArrayList<ReleaseContext> releaseContexts = resultContextsStorage.getContexts();
-
-        StringBuilder stringBuilder = new StringBuilder(resultText);
-        for(ReleaseContext releaseContext: releaseContexts) {
-            stringBuilder.insert(releaseContext.getParserRuleContext().getStart().getStartIndex()+1, "hello");
-            System.out.println(stringBuilder.toString());
-            System.out.println("all result ids= "+releaseContext.getAllContextsRulesIds());
-        }
-
-
-
-//        resultText.code
-//        Context firstResultContext = resultContexts.get(0);
-//        Context firstResultContext = resultVisitor.getCurrentContext();
-//        System.out.println("result ids= "+firstResultContext.getNestedRulesIds());
-        //////////////////////////////////
-*/
-
-
-
-
-
-
-
-
 
         String strPathToFile = "D:/projects/java/koliane/src/main/resources/default/test.dart";
 //        String strPathToOutputFile = "D:/projects/java/koliane/src/main/resources/test2.dart";
@@ -118,7 +63,37 @@ public class Main {
         Path relativePath = Paths.get("test.dart");
 //        Path pathToProject = Paths.get(Config.PATH_TO_PROGRAM_TEST_PROJECT);
         Path pathToProject = Paths.get("D:/projects/java/koliane/src/main/resources");
+*/
 
+
+
+
+
+//        CommandRequest commandRequest = new CommandRequest(args);
+//        Command inputCommand = commandRequest.getCommand();
+
+
+        Path pathToSpecification = Paths.get("D:/projects/java/koliane/src/main/resources/default/spec.yaml");
+        Path pathToProject = Paths.get("D:\\projects\\flutter\\inject_test");
+//        Specification specification = new Specification(pathToSpecification);
+//        specification.getCommandByName("add_entity");
+
+        Map options = new HashMap<>();
+        String projectName = new PubspecYaml().getProjectName(pathToProject.toString());
+        options.put(Placeholders.PROJECT_NAME, projectName);
+        options.put("entity_name", "AuthHello");
+
+        SpecificationCommand command = new SpecificationCommand("add_entity_method", pathToProject, pathToSpecification, options);
+        SpecificationExecutor executor = new SpecificationExecutor(command);
+        executor.exec();
+
+        return;
+
+
+
+
+
+/*
 //        OptionsMapper optionsMapper = new OptionsMapper();
         AddEntityOptionsMapper optionsMapper = new AddEntityOptionsMapper("asdf", "Auth");
 //        System.out.println(optionsMapper.getMap(pathToTemplateFile));
@@ -128,7 +103,7 @@ public class Main {
 
 
 
-return;
+return;*/
 
 
 /*
