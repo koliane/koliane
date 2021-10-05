@@ -6,7 +6,6 @@ import core.infrastructure.services.replacers.adding_replacer.contexts.*;
 import core.infrastructure.services.replacers.adding_replacer.helpers.NameGetter;
 import org.antlr.v4.runtime.ParserRuleContext;
 
-import java.sql.Array;
 import java.util.*;
 
 public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseContext> {

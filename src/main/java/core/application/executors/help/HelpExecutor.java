@@ -19,7 +19,7 @@ public class HelpExecutor extends BaseExecutor<HelpCommand> {
         String commonHelp = specification.getCommonHelp();
         if(!commonHelp.isEmpty()) {
             System.out.println(commonHelp);
-            System.out.println("==============================================");
+            System.out.println("==============================================\r\n");
         }
 
         Map<String, String> helps = specification.getHelps();

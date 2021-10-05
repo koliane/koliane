@@ -22,11 +22,12 @@ public class Main {
 //        String[] newArgs = {
 //                "pd=D:\\projects\\flutter\\inject_test",
 //                "sd=D:\\projects\\java\\koliane\\src\\main\\resources\\default\\spec.yaml",
-//                "add_entity_method",
+////                "add_entity_method",
+//                "help",
 //                "entity_name=AuthHello"
 //
 //        };
-
+//
 //            CommandRequest commandRequest = new CommandRequest(newArgs);
 
             CommandRequest commandRequest = new CommandRequest(args);

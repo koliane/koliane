@@ -1,13 +1,10 @@
 package core.infrastructure.services.replacers.adding_replacer.helpers;
 
-import antlr.training.TrainingParser;
 import antlr.training.TrainingParser.IdentifierContext;
 
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 

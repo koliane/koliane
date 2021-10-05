@@ -1,11 +1,9 @@
 package core.infrastructure.services.replacers.adding_replacer.insert_index_calculators;
 
-import antlr.training.TrainingParser;
 import antlr.training.TrainingParser.LibraryDefinitionContext;
 import antlr.training.TrainingParser.TopLevelDefinitionContext;
 import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholderContext;
 import core.infrastructure.services.replacers.adding_replacer.contexts.ReleaseContext;
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.List;

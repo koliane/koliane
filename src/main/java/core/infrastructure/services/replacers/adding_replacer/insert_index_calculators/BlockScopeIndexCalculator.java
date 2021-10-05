@@ -1,6 +1,5 @@
 package core.infrastructure.services.replacers.adding_replacer.insert_index_calculators;
 
-import antlr.training.TrainingParser;
 import antlr.training.TrainingParser.BlockContext;
 import antlr.training.TrainingParser.StatementContext;
 import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholderContext;

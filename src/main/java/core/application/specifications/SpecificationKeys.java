@@ -7,6 +7,7 @@ public class SpecificationKeys {
     public static final String CHUNKS_DIRECTORY_POSTFIX_FIELD = "chunks_directory_postfix";
     public static final String COMMANDS_FIELD = "commands";
     public static final String HELP_FIELD = "help";
+    public static final String PLACEHOLDERS_FIELD = "placeholders";
     public static final String CREATING_PATHS_FIELD = "create";
     public static final String UPDATING_PATHS_FIELD = "update";
 }

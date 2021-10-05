@@ -89,6 +89,7 @@ public abstract class BaseWalker<S, C> extends TrainingBaseListener {
 
         }
 
+        // Если плейсхолдер является частью имени класса/функции..., то это НЕ контекст
         if(ruleIndex == TrainingParser.RULE_placeholderLiteral) {
 
             if(ctx.getParent().getRuleIndex() == TrainingParser.RULE_className) {

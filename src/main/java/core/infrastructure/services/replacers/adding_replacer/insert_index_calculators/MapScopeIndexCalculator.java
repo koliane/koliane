@@ -1,8 +1,5 @@
 package core.infrastructure.services.replacers.adding_replacer.insert_index_calculators;
 
-import antlr.training.TrainingParser;
-import antlr.training.TrainingParser.SwitchCaseContext;
-import antlr.training.TrainingParser.SwitchStatementContext;
 import antlr.training.TrainingParser.MapLiteralContext;
 import antlr.training.TrainingParser.MapLiteralEntryContext;
 import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholderContext;
