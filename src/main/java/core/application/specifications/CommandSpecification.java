@@ -12,9 +12,7 @@ public class CommandSpecification {
 
     public CommandSpecification(String name, Map commandMap) {
         this.name = name;
-        if (commandMap.get(SpecificationKeys.HELP_FIELD) != null) {
-            this.help = (String) commandMap.get(SpecificationKeys.HELP_FIELD);
-        }
+        this.help = buildHelp(commandMap);
 
         this.createStrPaths = commandMap.get(SpecificationKeys.CREATING_PATHS_FIELD) == null
                 ? new ArrayList<>()
@@ -28,11 +26,24 @@ public class CommandSpecification {
 
     }
 
+    private String buildHelp(Map commandMap) {
+        String result = SpecificationHelper.buildHelp(commandMap);
+        if(result.isEmpty()) {
+            return "...\r\n";
+        }
+
+        return result;
+    }
+
     public List<String> getCreateStrPaths() {
         return createStrPaths;
     }
 
     public List<String> getUpdateStrPaths() {
         return updateStrPaths;
+    }
+
+    public String getHelp() {
+        return help;
     }
 }

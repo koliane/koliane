@@ -56,7 +56,6 @@ public abstract class BaseWalker<S, C> extends TrainingBaseListener {
     @Override
     public void exitEveryRule(ParserRuleContext ctx) {
         if(isContextRule(ctx)) {
-//            System.out.println("Exit "+ctx.getRuleIndex());
             currentContext = currentContext.getParent();
         }
     }
@@ -69,15 +68,7 @@ public abstract class BaseWalker<S, C> extends TrainingBaseListener {
         }
 
         if(ctx instanceof TrainingParser.BlockContext) {
-//            Set<Class> availableBlockContexts = new HashSet<>();
-//            Collections.addAll(availableBlockContexts,
-//                TrainingParser.IfStatementContext.class,
-//                TrainingParser.ForStatementContext.class
-//            );
             List<Class> availableBlockContextsList = new ArrayList<>(Arrays.asList(BaseWalker.availableBlockContexts));
-
-
-//            ParserRuleContext ancestor = ctx.getParent().getParent().getParent();
             List<ParserRuleContext> ancestors = new ArrayList<>();
             Collections.addAll(ancestors,
                     ctx.getParent(),
@@ -96,15 +87,6 @@ public abstract class BaseWalker<S, C> extends TrainingBaseListener {
                 return false;
             }
 
-//            if(ancestor instanceof TrainingParser.IfStatementContext) {
-//                System.out.println("IfStatementContext");
-//            }
-
-//            if(!availableBlockContexts.contains(ancestor.getClass())) {
-//            if(!availableBlockContextsList.contains(ancestor.getClass())) {
-//                return false;
-//            }
-
         }
 
         if(ruleIndex == TrainingParser.RULE_placeholderLiteral) {
@@ -113,7 +95,6 @@ public abstract class BaseWalker<S, C> extends TrainingBaseListener {
                 return false;
             }
         }
-//        System.out.println(ruleIndex);
 
         return true;
     }

@@ -19,7 +19,6 @@ public class PubspecYaml {
         try {
             Path path = Paths.get(pathToProject + File.separator + "pubspec.yaml");
             String document = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
-//            LinkedHashMap map = yaml.load(document);
             Map<String,String> map = yaml.load(document);
             name = map.get("name");
 

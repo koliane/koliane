@@ -1,8 +1,6 @@
 package core.infrastructure.file.changers;
 
-import core.application.mappers.ScenarioImplInterface;
 import core.infrastructure.file.FileByTemplateAction;
-import core.infrastructure.helpers.PathHelper;
 import core.infrastructure.helpers.YamlHelper;
 import core.infrastructure.helpers.placeholder.CodePlaceholderHelper;
 import core.infrastructure.helpers.placeholder.FilePlaceholderHelper;

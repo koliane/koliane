@@ -18,17 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SpecificationExecutor extends BaseExecutor {
-    /**
-     * Команда из консоли
-     */
-    SpecificationCommand command;
-
-    /**
-     * Спецификация из файла .yaml
-     */
-    Specification specification;
-
+public class SpecificationExecutor extends BaseExecutor<SpecificationCommand> {
     /**
      * Спецификация из файла .yaml для определенной команды
      */
@@ -36,13 +26,8 @@ public class SpecificationExecutor extends BaseExecutor {
 
 
     public SpecificationExecutor(SpecificationCommand command) throws Exception {
-        this.command = command;
-        init();
-    }
-
-    private void init() throws Exception {
-        specification = new Specification(command.getPathToSpecification());
-        commandSpecification = specification.getCommandByName(command.getName());
+        super(command);
+        commandSpecification = specification.getCommandByName(inputCommand.getName());
     }
 
     @Override
@@ -63,9 +48,9 @@ public class SpecificationExecutor extends BaseExecutor {
         }
 
         FileByTemplateCreator fileByTemplateCreator = new FileByTemplateCreator(
-                command.getPathToProject(),
+                inputCommand.getPathToProject(),
                 specification.getPathToTemplateProject(),
-                command.getOptions()
+                inputCommand.getOptions()
         );
 
         for (String strPath: strPaths) {
@@ -90,10 +75,10 @@ public class SpecificationExecutor extends BaseExecutor {
         }
 
         FileByTemplateChanger fileByTemplateChanger = new FileByTemplateChanger(
-            command.getPathToProject(),
+            inputCommand.getPathToProject(),
             specification.getPathToTemplateProject(),
-            command.getOptions(),
-            command.getName(),
+            inputCommand.getOptions(),
+            inputCommand.getName(),
             specification.getChunksDirectoryPostfix()
         );
 
@@ -116,13 +101,12 @@ public class SpecificationExecutor extends BaseExecutor {
             return;
         }
 
-        Path path = command.getPathToProject().resolve(specification.getAnchorFileName());
+        Path path = inputCommand.getPathToProject().resolve(specification.getAnchorFileName());
 
         if(!path.toFile().exists()) {
-            throw new NoSuchFileException("В текущей директории "+ command.getPathToProject() +" нет файла " + specification.getAnchorFileName());
+            throw new NoSuchFileException("В текущей директории "+ inputCommand.getPathToProject()
+                    +" нет файла " + specification.getAnchorFileName());
         }
     }
-
-
 
 }

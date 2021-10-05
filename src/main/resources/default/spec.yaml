@@ -2,8 +2,12 @@ path_to_template_project: "D:/projects/java/koliane/src/main/resources/default/"
 #anchor_file_name: pubspec.yaml
 #check_anchor: true
 #chunks_directory_postfix: _chunks
+help: Общая инфа!!!
 commands:
   add_entity:
+    help:
+      ф1Ж: фыва
+      яс: ва
     create: [
 #        lib/core/domain/entities/__entity_name__/model/__entity_name__.dart
 #        lib/core/domain/entities/__ENTITY_NAME__/repository/__ENTITY_NAME___repository.dart
@@ -13,12 +17,20 @@ commands:
 
     ]
   add_entity_method:
+    help: [Добавить метод в определенный entity]
     update: [
       lib/core/domain/entities/__entity_name__/model/__entity_name__.dart
     ]
 
   init:
-    help: Инициализация проекта
+    help: |+
+      Инициализация проекта
+      jh
+      kjl
+      - asdf
+      -cxv
+           ooo
+
     create: [
 #        "pubspec.yaml",
 #        "lib/main.dart",

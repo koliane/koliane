@@ -1,7 +1,6 @@
 package core.infrastructure.services.replacers.adding_replacer.helpers;
 
 import antlr.training.TrainingParser.*;
-import core.infrastructure.helpers.ReplacementHelper;
 import core.infrastructure.helpers.placeholder.CodePlaceholderHelper;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -483,23 +482,6 @@ public class IdentifierGetter<T extends ParserRuleContext> {
         return toArray(context.getText());
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /** @link localVariableDeclaration */
     protected List<String> fromLocalVariableDeclaration(LocalVariableDeclarationContext context) {
         return fromInitializedVariableDeclaration(context.initializedVariableDeclaration());
@@ -821,10 +803,6 @@ public class IdentifierGetter<T extends ParserRuleContext> {
     protected List<String> fromDtype(DtypeContext context) {
         return toArray(context.getText());
     }
-
-//    protected String firstFromIdentifier(IdentifierContext context) {
-//        return fromIdentifier(context).get(0);
-//    }
 
     /** @link qualified */
     protected List<String> fromQualified(QualifiedContext context) {

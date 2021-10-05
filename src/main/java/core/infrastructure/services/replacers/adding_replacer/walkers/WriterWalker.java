@@ -1,7 +1,6 @@
 package core.infrastructure.services.replacers.adding_replacer.walkers;
 
 import antlr.training.TrainingParser;
-import core.infrastructure.helpers.ReplacementHelper;
 import core.infrastructure.helpers.placeholder.CodePlaceholderHelper;
 import core.infrastructure.services.replacers.adding_replacer.contexts.*;
 import core.infrastructure.services.replacers.adding_replacer.helpers.NameGetter;
@@ -21,8 +20,6 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
         contextsStorage = new ReleaseContextsStorage();
 
         templateContexts.initPlaceholderRuleIdsMap();
-
-//        System.out.println(templateContexts.getContexts().get(0).getAllContextsRulesIds());
     }
 
     @Override
@@ -60,10 +57,6 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
 
     @Override
     public void enterEveryRule(ParserRuleContext ctx) {
-//        if(getAvailableContextRules().contains(ctx.getRuleIndex())) {
-//            System.out.println("Writer enterEveryRule");
-//        }
-
         if(!isContextRule(ctx)) {
             return;
         }
@@ -109,30 +102,21 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
         HashMap<String, ArrayList<Integer>> templateRuleIdsMap = templateContextsStorage.getPlaceholderRuleIdsMap();
 //        clearPlaceholderRuleId(templateRuleIdsMap);
 
-//        System.out.println(currentRulesIds);
-
         templateLoop: for(HashMap.Entry<String, ArrayList<Integer>> pair: templateRuleIdsMap.entrySet()) {
             String placeholderName = pair.getKey();
             ArrayList<Integer> templateRulesIds = pair.getValue();
 
 
-//            ArrayList<Context> templateContexts = templateContextsStorage.getContextByName(placeholderName).getAllContexts();
             PlaceholderContext placeholderContext = templateContextsStorage.getContextByName(placeholderName);
             ArrayList<Context> templatesContexts = placeholderContext.getAllContexts();
             Collections.reverse(templatesContexts);
             templatesContexts.remove(0);
-//            ParserRuleContext templateParserRuleContext = templateContext.getParserRuleContext();
 
             clearPlaceholderRuleId(templateRulesIds);
 
             if (templateRulesIds.size() != currentRulesIds.size()) {
                 continue;
             }
-//            System.out.println("YOOOOOOOOO");
-
-//            System.out.println(templateRulesIds);
-//            System.out.println(templateParserRuleContext.getRuleIndex());
-//            System.out.println(ctx.getRuleIndex());
 
             for(int i = 0; i < currentRulesIds.size(); i++) {
                 int ruleId = currentRulesIds.get(i);
@@ -144,10 +128,6 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
 
                 ParserRuleContext readerParserRuleContext = templatesContexts.get(i).getParserRuleContext();
                 ParserRuleContext writerParserRuleContext = currentContexts.get(i).getParserRuleContext();
-                ////////////////////
-//                int readerRuleId = readerParserRuleContext.getRuleIndex();
-//                int writerRuleId = writerParserRuleContext.getRuleIndex();
-                ////////////////////
 
                 if(!isEqualParserRuleContexts(readerParserRuleContext, writerParserRuleContext)) {
                     continue templateLoop;
@@ -155,11 +135,7 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
             }
 
             arResult.add(placeholderContext);
-//            System.out.println(currentRulesIds);
-//            return templateContextsStorage.getContextByName(placeholderName);
         }
-
-//        throw new Exception("Нет соответствующего шаблона");
 
         return arResult;
 
@@ -182,13 +158,6 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
      */
     public boolean isEqualParserRuleContexts(ParserRuleContext readerCtx, ParserRuleContext writerCtx) throws Exception {
         int ruleId = readerCtx.getRuleIndex();
-//        List<Integer> rulesIdsForCheck = new ArrayList<>();
-//        Collections.addAll(rulesIdsForCheck,
-//                TrainingParser.RULE_classDefinition,
-//                TrainingParser.RULE_functionBody,
-//                TrainingParser.RULE_switchStatement,
-//                TrainingParser.RULE_mapLiteral
-//        );
         List<Integer> rulesIdsForCheck = new ArrayList<>(Arrays.asList(BaseWalker.checkNameRules));
 
 
@@ -202,19 +171,14 @@ public class WriterWalker extends BaseWalker<ReleaseContextsStorage, ReleaseCont
         String readerName = readerNameGetter.get();
         String writerName = writerNameGetter.get();
 
-//        if(ReplacementHelper.isPlaceholder(readerName)) {
         if((new CodePlaceholderHelper()).isPlaceholder(readerName)) {
             return true;
         }
 
         if(!readerName.equals(writerName)) {
-//            if(!ReplacementHelper.hasPlaceholder(readerName)) {
             if(!(new CodePlaceholderHelper()).hasPlaceholder(readerName)) {
                 return false;
             }
-
-//            String beforePlaceholderText = ReplacementHelper.getBeforePlaceholderText(readerName);
-//            String afterPlaceholderText = ReplacementHelper.getAfterPlaceholderText(readerName);
 
             String beforePlaceholderText = (new CodePlaceholderHelper()).getBeforePlaceholderText(readerName);
             String afterPlaceholderText = (new CodePlaceholderHelper()).getAfterPlaceholderText(readerName);

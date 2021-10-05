@@ -5,10 +5,8 @@ import core.infrastructure.helpers.placeholder.CodePlaceholderHelper;
 import core.infrastructure.services.replacers.adding_replacer.contexts.Context;
 import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholderContext;
 import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholdersContextsStorage;
-import core.infrastructure.helpers.ReplacementHelper;
 import org.antlr.v4.runtime.ParserRuleContext;
 
-//import TrainingParser.IdentifierContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -19,10 +17,6 @@ public class ReaderWalker extends BaseWalker<PlaceholdersContextsStorage, Placeh
 
     @Override
     public void enterEveryRule(ParserRuleContext ctx) {
-//        if(getAvailableContextRules().contains(ctx.getRuleIndex())) {
-//            System.out.println("Reader enterEveryRule");
-//        }
-
         if(isContextRule(ctx)) {
             currentContext = createNewContext(ctx);
         }
@@ -34,10 +28,8 @@ public class ReaderWalker extends BaseWalker<PlaceholdersContextsStorage, Placeh
         Context newContext;
 
         if(ruleIndex == TrainingParser.RULE_placeholderLiteral) {
-//            String placeholderName = ReplacementHelper.getClearedPlaceholder(ctx.getText());
             String placeholderName = (new CodePlaceholderHelper()).getClearedPlaceholder(ctx.getText());
             newContext = new PlaceholderContext(placeholderName);
-            //TODO тут вероятно нужно реализовать копирование
             contextsStorage.add((PlaceholderContext) newContext);
         } else {
             newContext = new Context();

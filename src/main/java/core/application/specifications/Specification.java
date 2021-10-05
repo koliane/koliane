@@ -9,6 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Specification {
@@ -98,5 +100,28 @@ public class Specification {
 
     public boolean isCheckAnchor() {
         return checkAnchor;
+    }
+
+    public Map<String, String> getHelps() throws Exception {
+        Map<String, String> result = new HashMap<>();
+
+        if(map.get(SpecificationKeys.COMMANDS_FIELD) == null) {
+            return result;
+        }
+
+        Map<String, Map> commands = (Map) map.get(SpecificationKeys.COMMANDS_FIELD);
+
+        for(Map.Entry pair: commands.entrySet()) {
+            String commandName = (String) pair.getKey();
+            CommandSpecification commandSpecification = getCommandByName(commandName);
+            String help = commandSpecification.getHelp();
+            result.put(commandName, help);
+        }
+
+        return result;
+    }
+
+    public String getCommonHelp() {
+        return SpecificationHelper.buildHelp(map);
     }
 }
