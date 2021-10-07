@@ -109,12 +109,10 @@ public class FileByTemplateChanger extends FileByTemplateAction {
         for(Map.Entry<String, String> chunkPair: chunksMap.entrySet()) {
             String chunkName = chunkPair.getKey();
             String chunkText = chunkPair.getValue();
-            for (Map.Entry<String, String> pair : options.entrySet()) {
-                String key = pair.getKey();
-                String optionValue = pair.getValue();
-                String replacementWord = codePlaceholderHelper.buildPlaceholder(key);
-                chunkText = chunkText.replaceAll(replacementWord, optionValue);
-            }
+
+            chunkText = codePlaceholderHelper.replaceAllPlaceholders(chunkText, options);
+            chunkText = codePlaceholderHelper.deleteUnusedPlaceholders(chunkText, options);
+
             chunksMap.put(chunkName, chunkText);
         }
 

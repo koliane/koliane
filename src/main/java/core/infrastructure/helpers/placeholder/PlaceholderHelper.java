@@ -12,8 +12,8 @@ import java.util.regex.Pattern;
 abstract public class PlaceholderHelper {
     public static final String PLACEHOLDER_AVAILABLE_SYMBOLS_REGEX = "[a-zA-Z0-9_]";
 
-    private final String aliasPrefix;
-    private final String aliasPostfix;
+    protected final String aliasPrefix;
+    protected final String aliasPostfix;
 
     public PlaceholderHelper(String aliasPrefix, String aliasPostfix) {
         this.aliasPrefix = aliasPrefix;
