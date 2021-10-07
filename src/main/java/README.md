@@ -1,3 +1,30 @@
+## Запуск
+При изменении Java кода, для того, чтобы получить нормальный `.jar`, нужно выполнить команду `mvn install`  
+При запуске программы, нужно передать минимум 3-и параметра:
+* `pd` - путь до проекта, с которым работает программа
+```
+pd=%cd%
+```
+* `sd` - путь до спецификации
+```
+sd=D:\projects\flutter\template\spec.yaml
+```
+* Название команды
+```
+init
+```
+
+```
+// Шаблонный пример вызова программы
+java -jar #path_to_jar_file# pd=#path_to_project# sd=#path_to_specification_file# #command_name#
+
+// Полноценный пример вызова программы из .bat файла
+java -jar D:\projects\java\koliane\target\koliane-1.0-SNAPSHOT.jar ^
+  pd=%cd% ^
+  sd=D:\projects\flutter\template\spec.yaml ^
+  %*
+```
+
 ## Файл спецификации .yaml
 ### Плейсхолдеры
 * *Плейсхолдеры* - места на шаблонной странице, которые будут заменены кодом.

@@ -1,4 +1,0 @@
-enum EnvEnum{
-  prod,
-  dev
-}

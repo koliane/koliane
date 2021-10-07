@@ -14,6 +14,9 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
 
+//        if(true) {
+//            throw new Exception("");
+//        }
 //        int size = args.length;
 //        for(int i=0; i < size;i++) {
 //            System.out.println(args[i]);
@@ -21,7 +24,8 @@ public class Main {
 //
 //        String[] newArgs = {
 //                "pd=D:\\projects\\flutter\\inject_test",
-//                "sd=D:\\projects\\java\\koliane\\src\\main\\resources\\default\\spec.yaml",
+//                "sd=D:\\projects\\flutter\\template\\spec.yaml",
+////                "sd=D:\\projects\\java\\koliane\\src\\main\\resources\\default\\spec.yaml",
 ////                "add_entity_method",
 //                "test",
 //                "entity_name=AuthHello"
