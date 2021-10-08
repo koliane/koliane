@@ -1,10 +1,10 @@
-package core.infrastructure.services.replacers.adding_replacer.walkers;
+package core.infrastructure.services.replacers.dart_replacer.walkers;
 
 import antlr.training.TrainingParser;
 import core.infrastructure.helpers.placeholder.CodePlaceholderHelper;
-import core.infrastructure.services.replacers.adding_replacer.contexts.Context;
-import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholderContext;
-import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholdersContextsStorage;
+import core.infrastructure.services.replacers.dart_replacer.contexts.Context;
+import core.infrastructure.services.replacers.dart_replacer.contexts.PlaceholderContext;
+import core.infrastructure.services.replacers.dart_replacer.contexts.PlaceholdersContextsStorage;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import java.util.ArrayList;

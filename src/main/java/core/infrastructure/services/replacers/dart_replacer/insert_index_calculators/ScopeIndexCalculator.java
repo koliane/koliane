@@ -1,10 +1,10 @@
-package core.infrastructure.services.replacers.adding_replacer.insert_index_calculators;
+package core.infrastructure.services.replacers.dart_replacer.insert_index_calculators;
 
 import antlr.training.TrainingParser.PlaceholderLiteralContext;
-import core.infrastructure.services.replacers.adding_replacer.contexts.Placeholder;
-import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholderContext;
-import core.infrastructure.services.replacers.adding_replacer.contexts.ReleaseContext;
-import core.infrastructure.services.replacers.adding_replacer.helpers.IdentifierGetter;
+import core.infrastructure.services.replacers.dart_replacer.contexts.Placeholder;
+import core.infrastructure.services.replacers.dart_replacer.contexts.PlaceholderContext;
+import core.infrastructure.services.replacers.dart_replacer.contexts.ReleaseContext;
+import core.infrastructure.services.replacers.dart_replacer.helpers.IdentifierGetter;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 

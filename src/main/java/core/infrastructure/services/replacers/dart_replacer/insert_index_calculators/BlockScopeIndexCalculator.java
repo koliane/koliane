@@ -1,9 +1,9 @@
-package core.infrastructure.services.replacers.adding_replacer.insert_index_calculators;
+package core.infrastructure.services.replacers.dart_replacer.insert_index_calculators;
 
 import antlr.training.TrainingParser.BlockContext;
 import antlr.training.TrainingParser.StatementContext;
-import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholderContext;
-import core.infrastructure.services.replacers.adding_replacer.contexts.ReleaseContext;
+import core.infrastructure.services.replacers.dart_replacer.contexts.PlaceholderContext;
+import core.infrastructure.services.replacers.dart_replacer.contexts.ReleaseContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.List;

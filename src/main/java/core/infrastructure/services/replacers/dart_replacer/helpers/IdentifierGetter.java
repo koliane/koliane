@@ -1,4 +1,4 @@
-package core.infrastructure.services.replacers.adding_replacer.helpers;
+package core.infrastructure.services.replacers.dart_replacer.helpers;
 
 import antlr.training.TrainingParser.*;
 import core.infrastructure.helpers.placeholder.CodePlaceholderHelper;

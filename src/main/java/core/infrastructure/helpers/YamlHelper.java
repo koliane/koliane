@@ -15,4 +15,10 @@ public class YamlHelper {
 
         return yaml.load(document);
     }
+
+    public static Map buildMapByText(String text) {
+        Yaml yaml = new Yaml();
+
+        return yaml.load(text);
+    }
 }

@@ -1,7 +1,7 @@
-package core.infrastructure.services.replacers.adding_replacer.insert_index_calculators;
+package core.infrastructure.services.replacers.dart_replacer.insert_index_calculators;
 
-import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholderContext;
-import core.infrastructure.services.replacers.adding_replacer.contexts.ReleaseContext;
+import core.infrastructure.services.replacers.dart_replacer.contexts.PlaceholderContext;
+import core.infrastructure.services.replacers.dart_replacer.contexts.ReleaseContext;
 
 
 abstract public class InsertIndexCalculator {

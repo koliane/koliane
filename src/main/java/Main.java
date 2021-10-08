@@ -5,6 +5,11 @@ import core.application.commands.specification_command.SpecificationCommand;
 import core.application.executors.BaseExecutor;
 import core.application.executors.help.HelpExecutor;
 import core.application.executors.specification.SpecificationExecutor;
+import core.infrastructure.helpers.YamlHelper;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Map;
 
 //long m = System.currentTimeMillis();
 //System.out.println( (System.currentTimeMillis() - m));
@@ -13,7 +18,9 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-
+//        Path pathToYaml = Paths.get("D:\\projects\\flutter\\inject_test\\pubspec.yaml");
+//        Map map = YamlHelper.getYamlMap(pathToYaml);
+//
 //        if(true) {
 //            throw new Exception("");
 //        }

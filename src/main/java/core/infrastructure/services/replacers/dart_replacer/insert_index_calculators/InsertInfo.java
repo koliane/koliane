@@ -1,4 +1,4 @@
-package core.infrastructure.services.replacers.adding_replacer.insert_index_calculators;
+package core.infrastructure.services.replacers.dart_replacer.insert_index_calculators;
 
 public class InsertInfo {
     private int indexToInsert;

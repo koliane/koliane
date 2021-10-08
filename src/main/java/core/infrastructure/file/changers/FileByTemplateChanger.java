@@ -4,13 +4,14 @@ import core.infrastructure.file.FileByTemplateAction;
 import core.infrastructure.helpers.YamlHelper;
 import core.infrastructure.helpers.placeholder.CodePlaceholderHelper;
 import core.infrastructure.helpers.placeholder.FilePlaceholderHelper;
-import core.infrastructure.services.replacers.adding_replacer.AddingReplacer;
+import core.infrastructure.services.replacers.BaseReplacer;
+import core.infrastructure.services.replacers.dart_replacer.DartReplacer;
+import core.infrastructure.services.replacers.yaml_replacer.YamlReplacer;
+import core.infrastructure.utils.FormatUtilities;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -44,30 +45,20 @@ public class FileByTemplateChanger extends FileByTemplateAction {
         Path projectRelativePath = Paths.get(strProjectRelativePath);
         Path absolutePathToRelease = pathToProject.resolve(projectRelativePath);
         Path pathToTemplateFile = pathToTemplateProject.resolve(templateRelativePath);
-        File templateFile = pathToTemplateFile.toFile();
 
-        if(!templateFile.exists()) {
-            throw new NoSuchFileException("Нет шаблона для файла: " + pathToTemplateFile);
+
+        BaseReplacer replacer;
+
+        if(FormatUtilities.isYaml(absolutePathToRelease.toString())) {
+            replacer = new YamlReplacer(absolutePathToRelease, pathToTemplateFile, chunksDirectoryPostfix, commandName, options);
+
+        } else {
+            replacer = new DartReplacer(absolutePathToRelease, pathToTemplateFile, chunksDirectoryPostfix, commandName, options);
         }
 
-        String templateText = new String(Files.readAllBytes(pathToTemplateFile), StandardCharsets.UTF_8);
-        templateText = (new CodePlaceholderHelper()).replaceAllPlaceholders(templateText, options);
-
-        Map<String, String> chunksMap = getChunksMap(pathToTemplateFile);
-        if(chunksMap.isEmpty()) {
-            System.out.println("Нет шаблонов-заменителей для файла "+ strRelativePath);
-            return;
-        }
-
-        File releaseFile = absolutePathToRelease.toFile();
-        if(!releaseFile.exists()) {
-            throw new NoSuchFileException("Нет файла для вывода результата: " + absolutePathToRelease);
-        }
-        String releaseText = new String(Files.readAllBytes(absolutePathToRelease), StandardCharsets.UTF_8);
-
-        AddingReplacer replacer = new AddingReplacer(releaseText, templateText, chunksMap);
         String newReleaseText = replacer.replace();
 
+        File releaseFile = absolutePathToRelease.toFile();
         write(releaseFile, newReleaseText);
 
         System.out.println("Файл обновлен " + absolutePathToRelease);
@@ -92,30 +83,5 @@ public class FileByTemplateChanger extends FileByTemplateAction {
             }
 
         }
-    }
-
-    private Map<String, String> getChunksMap(Path pathToTemplateFile) throws IOException {
-        String chunksDirectoryName = pathToTemplateFile.getFileName().toString() + chunksDirectoryPostfix;
-        Path pathToChunksDirectory = pathToTemplateFile.getParent().resolve(chunksDirectoryName);
-        Path pathToYamlChunks = pathToChunksDirectory.resolve(Paths.get(commandName+".yaml"));
-
-        if(!pathToYamlChunks.toFile().exists()) {
-            throw new NoSuchFileException("Файла с чанками не существует: " + pathToYamlChunks);
-        }
-
-        Map<String, String> chunksMap = YamlHelper.getYamlMap(pathToYamlChunks);
-        CodePlaceholderHelper codePlaceholderHelper = new CodePlaceholderHelper();
-
-        for(Map.Entry<String, String> chunkPair: chunksMap.entrySet()) {
-            String chunkName = chunkPair.getKey();
-            String chunkText = chunkPair.getValue();
-
-            chunkText = codePlaceholderHelper.replaceAllPlaceholders(chunkText, options);
-            chunkText = codePlaceholderHelper.deleteUnusedPlaceholders(chunkText, options);
-
-            chunksMap.put(chunkName, chunkText);
-        }
-
-        return chunksMap;
     }
 }

@@ -1,8 +1,8 @@
-package core.infrastructure.services.replacers.adding_replacer.walkers;
+package core.infrastructure.services.replacers.dart_replacer.walkers;
 
 import antlr.training.TrainingBaseListener;
 import antlr.training.TrainingParser;
-import core.infrastructure.services.replacers.adding_replacer.contexts.Context;
+import core.infrastructure.services.replacers.dart_replacer.contexts.Context;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.Interval;
 

@@ -1,15 +1,16 @@
-package core.infrastructure.services.replacers.adding_replacer;
+package core.infrastructure.services.replacers.dart_replacer;
 
-import core.infrastructure.services.replacers.adding_replacer.insert_index_calculators.*;
-import core.infrastructure.services.replacers.adding_replacer.walkers.ReaderWalker;
+import core.infrastructure.helpers.placeholder.CodePlaceholderHelper;
+import core.infrastructure.services.replacers.TextReplacer;
+import core.infrastructure.services.replacers.dart_replacer.insert_index_calculators.*;
+import core.infrastructure.services.replacers.dart_replacer.walkers.ReaderWalker;
 import antlr.training.TrainingLexer;
 import antlr.training.TrainingParser;
-import core.infrastructure.services.replacers.adding_replacer.walkers.WriterWalker;
-import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholderContext;
-import core.infrastructure.services.replacers.adding_replacer.contexts.PlaceholdersContextsStorage;
-import core.infrastructure.services.replacers.adding_replacer.contexts.ReleaseContext;
-import core.infrastructure.services.replacers.adding_replacer.contexts.ReleaseContextsStorage;
-import core.infrastructure.services.replacers.BaseReplacer;
+import core.infrastructure.services.replacers.dart_replacer.walkers.WriterWalker;
+import core.infrastructure.services.replacers.dart_replacer.contexts.PlaceholderContext;
+import core.infrastructure.services.replacers.dart_replacer.contexts.PlaceholdersContextsStorage;
+import core.infrastructure.services.replacers.dart_replacer.contexts.ReleaseContext;
+import core.infrastructure.services.replacers.dart_replacer.contexts.ReleaseContextsStorage;
 import core.infrastructure.utils.TextUtilities;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -18,25 +19,61 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AddingReplacer extends BaseReplacer {
-    private final String templateText;
-    private final String releaseText;
-    private final Map<String, String> chunksMap;
+//public class AddingReplacer extends BaseReplacer {
+public class DartReplacer extends TextReplacer {
+//    private final String templateText;
+//    private final String releaseText;
+//    private final Map<String, String> chunksMap;
 
     private PlaceholdersContextsStorage placeholdersContextsStorage;
     private ReleaseContextsStorage releaseContextsStorage;
 
 
 
-    public AddingReplacer(String releaseText, String templateText, Map<String, String> chunksMap) {
-        this.releaseText = releaseText;
-        this.templateText = templateText;
-        this.chunksMap = chunksMap;
+    public DartReplacer(
+            Path absolutePathToRelease,
+            Path absolutePathToTemplate,
+            String chunksDirectoryPostfix,
+            String commandName,
+//            Map<String, String> chunksMap,
+            Map<String, String> options
+    ) throws Exception {
+        super(absolutePathToRelease, absolutePathToTemplate, chunksDirectoryPostfix, commandName, options);
+//        chunksMap = (Map<String, String>) chunksMap;
+        chunksMap = updateChunksMap((Map<String, String>) chunksMap, options);
+        if(chunksMap.isEmpty()) {
+            throw new Exception("Нет шаблонов-заменителей для файла "+ absolutePathToTemplate);
+        }
     }
+
+    private Map<String, String> updateChunksMap(Map<String, String> chunksMap, Map<String, String> options) {
+        Map<String, String> newChunksMap = new HashMap<>();
+        CodePlaceholderHelper codePlaceholderHelper = new CodePlaceholderHelper();
+
+        for(Map.Entry<String, String> chunkPair: chunksMap.entrySet()) {
+            String chunkName = chunkPair.getKey();
+            String chunkText = chunkPair.getValue();
+
+            chunkText = codePlaceholderHelper.replaceAllPlaceholders(chunkText, options);
+            chunkText = codePlaceholderHelper.deleteUnusedPlaceholders(chunkText, options);
+
+
+            newChunksMap.put(chunkName, chunkText);
+        }
+
+        return newChunksMap;
+    }
+//    public AddingReplacer(String releaseText, String templateText, Map<String, String> chunksMap) {
+//        this.releaseText = releaseText;
+//        this.templateText = templateText;
+//        this.chunksMap = chunksMap;
+//    }
 
     public String replace() throws Exception {
         init();
@@ -67,7 +104,7 @@ public class AddingReplacer extends BaseReplacer {
                 String replacementText;
 
                 if(insertInfo.isTopAttaching()) {
-                    replacementText = buildTopReplacementText(placeholderContext, templateText, chunksMap);
+                    replacementText = buildTopReplacementText(placeholderContext, templateText, (Map<String, String>) chunksMap);
                     int firstLineSize = TextUtilities.getFirstLine(releaseText).length();
 
                     if(insertToIndex < firstLineSize) {
@@ -86,7 +123,7 @@ public class AddingReplacer extends BaseReplacer {
 
                     insertToIndex -= offset.length();
 
-                    replacementText = buildBottomReplacementText(placeholderContext, templateText, chunksMap);
+                    replacementText = buildBottomReplacementText(placeholderContext, templateText, (Map<String, String>) chunksMap);
                 }
 
                 String releaseTextChunk = releaseText.substring(insertFromIndex, insertToIndex);

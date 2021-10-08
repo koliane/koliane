@@ -1,9 +1,9 @@
-package core.infrastructure.services.replacers.adding_replacer.walkers;
+package core.infrastructure.services.replacers.dart_replacer.walkers;
 
 import antlr.training.TrainingParser;
 import core.infrastructure.helpers.placeholder.CodePlaceholderHelper;
-import core.infrastructure.services.replacers.adding_replacer.contexts.*;
-import core.infrastructure.services.replacers.adding_replacer.helpers.NameGetter;
+import core.infrastructure.services.replacers.dart_replacer.contexts.*;
+import core.infrastructure.services.replacers.dart_replacer.helpers.NameGetter;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import java.util.*;
