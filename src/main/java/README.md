@@ -76,7 +76,9 @@ newSuper#-entity_name-#Method() {
 ---
 ### Доступные параметры:
 (поля, помеченные звездочкой являются обязательными)
-* `path_to_template_project`* - путь до проекта с шаблонами  
+* `path_to_template_project` - путь до проекта с шаблонами. Если не указан, то берется директория, 
+в которой находится файл спецификации и проверяется наличие файла pubspec.yaml, чтобы точно понимать, 
+что мы находимся в проекте flutter (пусть и шаблонном)
 ```
 path_to_template_project: "D:/projects/java/koliane/src/main/resources/default/"
 ```

@@ -29,18 +29,18 @@ public class Main {
 //            System.out.println(args[i]);
 //        }
 //
-//        String[] newArgs = {
-//                "pd=D:\\projects\\flutter\\inject_test",
-//                "sd=D:\\projects\\flutter\\template\\spec.yaml",
-////                "sd=D:\\projects\\java\\koliane\\src\\main\\resources\\default\\spec.yaml",
-////                "add_entity_method",
-//                "test",
-//                "entity_name=AuthHello"
-//
-//        };
-//        CommandRequest commandRequest = new CommandRequest(newArgs);
+        String[] newArgs = {
+                "pd=D:\\projects\\flutter\\inject_test",
+                "sd=D:\\projects\\flutter\\template\\spec.yaml",
+//                "sd=D:\\projects\\java\\koliane\\src\\main\\resources\\default\\spec.yaml",
+//                "add_entity_method",
+                "test",
+                "entity_name=AuthHello"
 
-            CommandRequest commandRequest = new CommandRequest(args);
+        };
+        CommandRequest commandRequest = new CommandRequest(newArgs);
+
+//            CommandRequest commandRequest = new CommandRequest(args);
             Command inputCommand = commandRequest.getCommand();
             BaseExecutor executor;
 

@@ -1,6 +1,5 @@
 package core.infrastructure.utils;
 
-import com.sun.istack.internal.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;

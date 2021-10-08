@@ -74,11 +74,23 @@ public class Specification {
     }
 
     public Path getPathToTemplateProject() throws Exception {
+        Path path;
+
         if(map.get(SpecificationKeys.PATH_TO_TEMPLATE_PROJECT_FIELD) == null) {
-            throw new Exception("В спецификации нет поля " + SpecificationKeys.PATH_TO_TEMPLATE_PROJECT_FIELD + " или оно = null");
+            Path specificationDirectory =  pathToSpecification.getParent();
+            Path pathToPubspecYaml = specificationDirectory.resolve(Paths.get(DEFAULT_ANCHOR_FILE_NAME));
+            if(!pathToPubspecYaml.toFile().exists()) {
+                throw new Exception("В спецификации нет поля " + SpecificationKeys.PATH_TO_TEMPLATE_PROJECT_FIELD
+                        + " или оно = null, а в директории со спецификацией нету файла " + DEFAULT_ANCHOR_FILE_NAME
+                        + ", чтобы считать директорию шаблонным проектом"
+                );
+            }
+
+            path = specificationDirectory;
+        } else {
+            path = Paths.get((String) map.get(SpecificationKeys.PATH_TO_TEMPLATE_PROJECT_FIELD));
         }
 
-        Path path = Paths.get((String) map.get(SpecificationKeys.PATH_TO_TEMPLATE_PROJECT_FIELD));
         if(!path.isAbsolute()) {
             throw new Exception("Путь до проекта должен быть абсолютным. Указан путь: " + path);
         }
