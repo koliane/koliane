@@ -19,8 +19,10 @@ public class Main {
 //                "sd=D:\\projects\\flutter\\template\\spec.yaml",
 ////                "sd=D:\\projects\\java\\koliane\\src\\main\\resources\\default\\spec.yaml",
 ////                "add_entity_method",
-//                "init",
-////                "entity_name=AuthHello"
+////                "init",
+//                "test",
+////                "add_entity",
+//                "entity_name=auth"
 //
 //        };
 //        CommandRequest commandRequest = new CommandRequest(newArgs);

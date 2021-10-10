@@ -2,6 +2,8 @@ package core.application.executors.specification;
 
 import core.application.commands.specification_command.SpecificationCommand;
 import core.application.executors.BaseExecutor;
+import core.application.executors.specification.path_commands.CreatePathCommand;
+import core.application.executors.specification.path_commands.UpdatePathCommand;
 import core.application.specifications.CommandSpecification;
 import core.application.specifications.Specification;
 import core.infrastructure.file.changers.FileByTemplateChanger;
@@ -41,8 +43,9 @@ public class SpecificationExecutor extends BaseExecutor<SpecificationCommand> {
 
     private void create() throws Exception {
         System.out.println("---------- START CREATING ----------------");
-        List<String> strPaths = commandSpecification.getCreateStrPaths();
-        if(strPaths.isEmpty()) {
+
+        List<CreatePathCommand> pathsCommands = commandSpecification.getCreatePathsCommands();
+        if(pathsCommands.isEmpty()) {
             System.out.println("Нет файлов для добавления");
             return;
         }
@@ -53,13 +56,13 @@ public class SpecificationExecutor extends BaseExecutor<SpecificationCommand> {
                 inputCommand.getOptions()
         );
 
-        for (String strPath: strPaths) {
-            Path relativePath = Paths.get(strPath);
-            if(relativePath.isAbsolute()) {
-                throw new Exception("Путь до файлов в спецификации должен быть относительным. Команда create. " + relativePath);
+        for (CreatePathCommand pathCommand: pathsCommands) {
+            Path relativePath = pathCommand.getPath();
+            if(pathCommand.isSoftMode()) {
+                fileByTemplateCreator.softCreate(relativePath.toString());
+            } else {
+                fileByTemplateCreator.forceCreate(relativePath.toString());
             }
-
-            fileByTemplateCreator.forceCreate(relativePath.toString());
 
         }
 
@@ -68,8 +71,9 @@ public class SpecificationExecutor extends BaseExecutor<SpecificationCommand> {
 
     private void update() throws Exception {
         System.out.println("---------- START UPDATING ----------------");
-        List<String> strPaths = commandSpecification.getUpdateStrPaths();
-        if(strPaths.isEmpty()) {
+
+        List<UpdatePathCommand> pathsCommands = commandSpecification.getUpdatePathsCommands();
+        if(pathsCommands.isEmpty()) {
             System.out.println("Нет файлов для обновления");
             return;
         }
@@ -82,16 +86,11 @@ public class SpecificationExecutor extends BaseExecutor<SpecificationCommand> {
             specification.getChunksDirectoryPostfix()
         );
 
-        for (String strPath: strPaths) {
-            Path relativePath = Paths.get(strPath);
-            if(relativePath.isAbsolute()) {
-                throw new Exception("Путь до файлов в спецификации должен быть относительным. Команда update. " + relativePath);
-            }
-
+        for (UpdatePathCommand pathCommand: pathsCommands) {
+            Path relativePath = pathCommand.getPath();
             fileByTemplateChanger.change(relativePath.toString());
 
         }
-
 
         System.out.println("---------- UPDATED -----------------------");
     }

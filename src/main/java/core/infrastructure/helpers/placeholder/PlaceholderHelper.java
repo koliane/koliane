@@ -85,15 +85,17 @@ abstract public class PlaceholderHelper {
 
     public List<String> getPlaceholders(String text) {
         String defaultSymbolsPattern = PLACEHOLDER_AVAILABLE_SYMBOLS_REGEX + "*";
-        Pattern pattern = Pattern.compile(
-            defaultSymbolsPattern
-            + "("
-            + aliasPrefix
-            + defaultSymbolsPattern
-            + aliasPostfix
-            + ")"
-            + defaultSymbolsPattern
-        );
+        String mainSymbols = defaultSymbolsPattern + "[a-zA-Z0-9]";
+
+        String strPattern = defaultSymbolsPattern
+                + "("
+                + aliasPrefix
+//                + defaultSymbolsPattern
+                + mainSymbols
+                + aliasPostfix
+                + ")"
+                + defaultSymbolsPattern;
+        Pattern pattern = Pattern.compile(strPattern);
         Matcher matcher = pattern.matcher(text);
 
         List<String> result = new ArrayList<>();
