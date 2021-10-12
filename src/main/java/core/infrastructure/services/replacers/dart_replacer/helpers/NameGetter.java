@@ -38,6 +38,14 @@ public class NameGetter {
             return fromListLiteral((ListLiteralContext) primaryContext);
         }
 
+        if(primaryContext instanceof TypeListContext) {
+            return fromTypeList((TypeListContext) primaryContext);
+        }
+
+        if(primaryContext instanceof EnumTypeContext) {
+            return fromEnumType((EnumTypeContext) primaryContext);
+        }
+
         if(primaryContext instanceof BlockContext) {
             return fromBlock((BlockContext) primaryContext);
         }
@@ -109,6 +117,26 @@ public class NameGetter {
     /** @link listLiteral */
     private String fromListLiteral(ListLiteralContext context) throws Exception {
         return fromCollectionLiteral(context);
+    }
+
+    /** @link typeList */
+    private String fromTypeList(TypeListContext context) throws Exception {
+//        return fromCollectionLiteral(context);
+        ParserRuleContext parent = context.getParent();
+        if(parent instanceof InterfacesContext) {
+            ClassDefinitionContext classDefinitionContext = (ClassDefinitionContext) parent.getParent();
+            IdentifierGetter<ClassDefinitionContext> identifierGetter = new IdentifierGetter<>((ClassDefinitionContext) classDefinitionContext);
+            String classIdentifier = identifierGetter.get().get(0);
+
+            return classIdentifier + "interfaces";
+        }
+
+        throw new Exception("Не найдено имя для typeList: " + context.getClass());
+    }
+
+    /** @link enumType */
+    private String fromEnumType(EnumTypeContext context) throws Exception {
+        return context.className().getText();
     }
 
     private String fromCollectionLiteral(ParserRuleContext context) throws Exception {

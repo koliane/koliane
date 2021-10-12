@@ -172,6 +172,10 @@ public class DartReplacer extends TextReplacer {
 
         } else if(writerParserRuleContext instanceof TrainingParser.BlockContext) {
             calculator = new BlockScopeIndexCalculator(readerContext, writerContext);
+        } else if(writerParserRuleContext instanceof TrainingParser.TypeListContext) {
+            calculator = new TypeListScopeIndexCalculator(readerContext, writerContext);
+        } else if(writerParserRuleContext instanceof TrainingParser.EnumTypeContext) {
+            calculator = new EnumScopeIndexCalculator(readerContext, writerContext);
         }
 
 
@@ -192,7 +196,7 @@ public class DartReplacer extends TextReplacer {
         String placeholderOffset = getTopPlaceholderOffset();
         String placeholderLineOffset = getPlaceholderLineOffset(templateText, placeholderContext);
 
-        addOffsetsForEachLine(replacementText, placeholderLineOffset);
+        replacementText = addOffsetsForEachLine(replacementText, placeholderLineOffset);
         replacementText = placeholderOffset + placeholderLineOffset + replacementText;
 
         return replacementText;

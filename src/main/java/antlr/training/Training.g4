@@ -210,6 +210,7 @@ binaryOperator
 // 10.2 Getters
 getterSignature
   : returnType? 'get' identifier
+//  : returnType? Get identifier
   ;
 // 10.2 Setters
 setterSignature
@@ -267,11 +268,12 @@ enumType
   : metadata 'enum' className
 //  : metadata 'enum' identifier
 //    '{' enumEntry (',' enumEntry)* ','? '}'
-    openFigureBracket enumEntry (',' enumEntry)* ','? closeFigureBracket
+    openFigureBracket enumEntry? (',' enumEntry)* ','? closeFigureBracket
   ;
 
 enumEntry
   : metadata identifier
+  | placeholderLiteral
   ;
 
 // 14 Generics
@@ -834,16 +836,23 @@ topLevelDefinition
   | 'external'? getterSignature ';'
   | 'external'? setterSignature ';'
   | functionSignature functionBody
+//  | returnType? Get identifier functionBody
   | returnType? 'get' identifier functionBody
   | returnType? 'set' identifier formalParameterList functionBody
   | ('final' | 'const') dtype? staticFinalDeclarationList ';'
   | variableDeclaration ';'
   | placeholderLiteral
   ;
-getOrSet
-  : 'get'
-  | 'set'
-  ;
+//getOrSet
+//  : 'get'
+//  | 'set'
+////  : Get
+////  : 'set'
+//  ;
+fragment
+Get:
+  (~[.])?'get'
+;
 libraryDefinition
 //  : scriptTag? libraryName? importOrExport* partDirective*
   : importScope
@@ -913,7 +922,9 @@ uriTest
 
 // 19.1 Static Types
 dtype
+//  : typeName typeArguments?
   : typeName typeArguments?
+  | placeholderLiteral
   ;
 typeName
   : qualified

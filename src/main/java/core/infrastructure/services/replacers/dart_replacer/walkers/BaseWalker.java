@@ -17,6 +17,8 @@ public abstract class BaseWalker<S, C> extends TrainingBaseListener {
             TrainingParser.RULE_switchStatement,
             TrainingParser.RULE_mapLiteral,
             TrainingParser.RULE_listLiteral,
+//            TrainingParser.RULE_typeList,
+            TrainingParser.RULE_enumType,
             TrainingParser.RULE_block,
             TrainingParser.RULE_placeholderLiteral,
     };
@@ -27,6 +29,8 @@ public abstract class BaseWalker<S, C> extends TrainingBaseListener {
             TrainingParser.RULE_switchStatement,
             TrainingParser.RULE_mapLiteral,
             TrainingParser.RULE_listLiteral,
+            TrainingParser.RULE_typeList,
+            TrainingParser.RULE_enumType,
             TrainingParser.RULE_block,
     };
 

@@ -30,12 +30,10 @@ public class CommandSpecification {
                 : buildCreatePathsCommandsList( (List) commandMap.get(SpecificationKeys.CREATING_PATHS_FIELD))
         ;
 
-        this.updatePathsCommands = commandMap.get(SpecificationKeys.CREATING_PATHS_FIELD) == null
+        this.updatePathsCommands = commandMap.get(SpecificationKeys.UPDATING_PATHS_FIELD) == null
                 ? new ArrayList<>()
                 : buildUpdatePathsCommandsList( (List) commandMap.get(SpecificationKeys.UPDATING_PATHS_FIELD))
         ;
-
-
     }
 
     private List<CreatePathCommand> buildCreatePathsCommandsList(List createItems) throws Exception {

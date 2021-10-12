@@ -93,6 +93,17 @@ public class IdentifierGetter<T extends ParserRuleContext> {
             return fromNamedArgument((NamedArgumentContext) primaryContext);
         }
 
+        if(primaryContext instanceof ClassDefinitionContext) {
+            return fromClassDefinition((ClassDefinitionContext) primaryContext);
+        }
+
+        if(primaryContext instanceof DtypeContext) {
+            return fromDtype((DtypeContext) primaryContext);
+        }
+
+        if(primaryContext instanceof EnumEntryContext) {
+            return fromEnumEntry((EnumEntryContext) primaryContext);
+        }
 
         throw new Exception("Идентификатор не найден для класса "+primaryContext.getClass());
     }
@@ -569,6 +580,15 @@ public class IdentifierGetter<T extends ParserRuleContext> {
     /** @link enumType */
     protected List<String> fromEnumType(EnumTypeContext context) {
         return fromClassName(context.className());
+    }
+
+    /** @link enumEntry */
+    protected List<String> fromEnumEntry(EnumEntryContext context) {
+        if(context.placeholderLiteral() != null) {
+            return fromPlaceholderLiteral(context.placeholderLiteral());
+        }
+
+        return fromIdentifier(context.identifier());
     }
 
     /** @link importScope */

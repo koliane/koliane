@@ -26,7 +26,7 @@ List abc = [
 ### Порядок добавления нового обработчика scope
 * Создать новый класс, наследник от `InsertIndexCalculator`. Чаще всего, это наследник от `ScopeIndexCalculator`
 * В класс `BaseWalker` в св-ва `contextRules` и `checkNameRules` добавить класс, созданный выше
-* В класс `AddingReplacer`, в метод `getIndexToInsert`, добавить соответствующее условие
+* В класс `DartReplacer`, в метод `getIndexToInsert`, добавить соответствующее условие
 * В класс `NameGetter` добавить функционал определения уникального имени для созданного scope.
 Если в `NameGetter` используется функционал из `IdentifierGetter`, то в метод `get` добавить соответствующий функционал
 * Если новый scope является `block`, то нужно добавить в класс `BaseWalker` в св-во `availableBlockContexts` соответствующий класс
