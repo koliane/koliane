@@ -46,7 +46,7 @@ variableDeclaration
   ;
 
 declaredIdentifier
-  : metadata finalConstVarOrType identifier
+  : metadata 'late'? finalConstVarOrType identifier
   ;
 finalConstVarOrType
   : 'final' dtype?
@@ -123,11 +123,13 @@ normalFormalParameter
   | simpleFormalParameter
   ;
 functionFormalParameter
-  : metadata 'covariant'? returnType? identifier formalParameterPart
+  : metadata ('covariant'|'required')? returnType? identifier formalParameterPart identifier
   ;
 simpleFormalParameter
   : declaredIdentifier
-  | metadata 'covariant'? identifier
+//  | 'covariant'? dtype? identifier
+//  | metadata 'covariant'? identifier
+  | metadata ('covariant'|'required')? dtype? identifier
   ;
 fieldFormalParameter
   : metadata finalConstVarOrType? 'this' '.' identifier formalParameterPart?
@@ -139,6 +141,7 @@ defaultFormalParameter
   ;
 defaultNamedParameter
   : normalFormalParameter ('=' expression)?
+  | normalFormalParameter '=' literal
   | normalFormalParameter (':' expression)?
   ;
 
@@ -179,8 +182,8 @@ declaration
   | 'external'? operatorSignature
   | ('external' 'static'?)? functionSignature
   | 'static' ('final' | 'const') dtype? staticFinalDeclarationList
-  | 'final' dtype? initializedIdentifierList
-  | ('static' | 'covariant')? ('var' | dtype) initializedIdentifierList
+  | 'late'? 'final' dtype? initializedIdentifierList
+  | 'late'? ('static' | 'covariant' | 'required')? ('var' | dtype) initializedIdentifierList
 //  | placeholderLiteral
   ;
 
@@ -196,7 +199,8 @@ operatorSignature
   : returnType? 'operator' operator_ formalParameterList
   ;
 operator_
-  : '~' | binaryOperator | '[]' | '[]='
+//  : '~' | binaryOperator | '[]' | '[]='
+  : '~' | binaryOperator | OPEN_SQUARE_BRACKET CLOSE_SQUARE_BRACKET | '[]='
   ;
 
 binaryOperator
@@ -210,7 +214,6 @@ binaryOperator
 // 10.2 Getters
 getterSignature
   : returnType? 'get' identifier
-//  : returnType? Get identifier
   ;
 // 10.2 Setters
 setterSignature
@@ -294,6 +297,7 @@ expression
   : assignableExpression assignmentOperator expression
   | conditionalExpression cascadeSection*
   | throwExpression
+  | forStatement
   | placeholderLiteral
   ;
 expressionWithoutCascade
@@ -302,14 +306,14 @@ expressionWithoutCascade
   | throwExpressionWithoutCascade
   ;
 expressionList
-  : expression (',' expression)*
+  : '...'? expression (',' '...'? expression)*
   ;
 primary
   : thisExpression
   | 'super' unconditionalAssignableSelector
   | functionExpression
   | literal
-  | identifier
+  | identifier typeParameters? '!'?
   | nayaExpression
   | constObjectExpression
   | '(' expression ')'
@@ -359,12 +363,14 @@ booleanLiteral
 
 stringLiteral: (MultiLineString | SingleLineString)+;
 
+
 SingleLineString
   : '"' StringContentDQ* '"'
   | '\'' StringContentSQ* '\''
   | 'r\'' (~('\'' | '\n' | '\r'))* '\''
   | 'r"' (~('"' | '\n' | '\r'))* '"'
   ;
+
 
 fragment
 StringContentDQ
@@ -471,6 +477,7 @@ argumentList
   ;
 namedArgument
   : label expression
+//  : label (expression | literal)
   ;
 
 // 16.18.2 Cascaded Invocations
@@ -501,6 +508,7 @@ compoundAssignmentOperator
   | '~/='
   | '%='
   | '+='
+  | '-='
   | '<<='
   | '>>='
   | '>>>='
@@ -580,9 +588,9 @@ shiftExpression
   | 'super' (shiftOperator additiveExpression)+
   ;
 shiftOperator
-  : '<<'
-  | '>>'
-  | '>>>'
+  : '<' '<'
+  | '>' '>'
+  | '>' '>' '>'
   ;
 
 // 16.28 Additive Expression
@@ -631,14 +639,16 @@ awaitExpression
 // 16.32 Postfix Expressions
 postfixExpression
   : assignableExpression postfixOperator
-  | primary selector*
+  | primary '!'? selector*
   ;
 postfixOperator
   : incrementOperator
   ;
 selector
-  : assignableSelector
-  | argumentPart
+  : assignableSelector '!'?
+  | argumentPart '!'?
+//  : assignableSelector
+//  | argumentPart
   ;
 
 incrementOperator
@@ -654,20 +664,25 @@ assignableExpression
   ;
 unconditionalAssignableSelector
 //  : '[' expression ']'
-  : openSquareBracket expression closeSquareBracket
+  : openSquareBracket expression closeSquareBracket '!'?
   | '.' identifier
   ;
 assignableSelector
-  : unconditionalAssignableSelector
+  : unconditionalAssignableSelector+
   | '?.' identifier
+  | '!.' identifier
   ;
 
 identifier
   : IDENTIFIER
+  | 'factory'
+  | 'get'
+  | 'required'
+  | 'library'
 //  | PlaceholderString
   ;
 qualified
-  : identifier ('.' identifier)?
+  : identifier ('.' identifier)? '?'?
   ;
 // 16.35 Type Test
 typeTest
@@ -715,6 +730,7 @@ nonLabledStatment
 // 17.2 Expression Statements
 expressionStatement
   : expression? ';'
+  | expression
   ;
 
 // 17.3 Local Variable Declaration
@@ -836,7 +852,6 @@ topLevelDefinition
   | 'external'? getterSignature ';'
   | 'external'? setterSignature ';'
   | functionSignature functionBody
-//  | returnType? Get identifier functionBody
   | returnType? 'get' identifier functionBody
   | returnType? 'set' identifier formalParameterList functionBody
   | ('final' | 'const') dtype? staticFinalDeclarationList ';'
@@ -849,10 +864,6 @@ topLevelDefinition
 ////  : Get
 ////  : 'set'
 //  ;
-fragment
-Get:
-  (~[.])?'get'
-;
 libraryDefinition
 //  : scriptTag? libraryName? importOrExport* partDirective*
   : importScope
@@ -923,7 +934,7 @@ uriTest
 // 19.1 Static Types
 dtype
 //  : typeName typeArguments?
-  : typeName typeArguments?
+  : typeName typeArguments? '?'?
   | placeholderLiteral
   ;
 typeName
@@ -940,12 +951,13 @@ typeList
 // 19.3.1 Typedef
 typeAlias
   : metadata 'typedef' typeAliasBody
+  | 'typedef' identifier typeParameters? '=' typeAliasBody
   ;
 typeAliasBody
   : functionTypeAlias
   ;
 functionTypeAlias
-  : functionPrefix typeParameters? formalParameterList ';'
+  : functionPrefix typeParameters? formalParameterList ';'?
   ;
 functionPrefix
   : returnType? identifier
@@ -964,6 +976,8 @@ IDENTIFIER_NO_DOLLAR
 IDENTIFIER
   : IDENTIFIER_START IDENTIFIER_PART*
   ;
+
+FACTORY: 'f' 'a' 'c' 't' 'o' 'r' 'y';
 
 //BUILT_IN_IDENTIFIER
 //  : 'abstract'
