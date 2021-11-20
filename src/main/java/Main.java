@@ -12,7 +12,6 @@ import core.application.executors.specification.SpecificationExecutor;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-//        System.out.println("Nanana !!!!");
 //        for(int i=0; i< args.length;i++)
 //            System.out.println(args[i]);
 //        if(true)
