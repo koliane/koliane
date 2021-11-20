@@ -12,24 +12,29 @@ import core.application.executors.specification.SpecificationExecutor;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        String[] newArgs = {
-                "pd=D:\\projects\\flutter\\inject_test",
-//                "pd=D:\\projects\\flutter\\temp",
-                "sd=D:\\projects\\flutter\\template\\spec.yaml",
-//                "sd=D:\\projects\\java\\koliane\\src\\main\\resources\\default\\spec.yaml",
-                "add_entity_method",
-//                "init",
-//                "test",
-//                "help",
-//                "add_entity",
-                "entity_name=Auth",
-                "method_name=register",
-                "data_source=api"
+//        System.out.println("Nanana !!!!");
+//        for(int i=0; i< args.length;i++)
+//            System.out.println(args[i]);
+//        if(true)
+//            throw new Exception("Прерывание");
+//        String[] newArgs = {
+//                "pd=D:\\projects\\flutter\\inject_test",
+////                "pd=D:\\projects\\flutter\\temp",
+//                "sd=D:\\projects\\flutter\\template\\spec.yaml",
+////                "sd=D:\\projects\\java\\koliane\\src\\main\\resources\\default\\spec.yaml",
+//                "add_entity_method",
+////                "init",
+////                "test",
+////                "help",
+////                "add_entity",
+//                "entity_name=Auth",
+//                "method_name=register",
+//                "data_source=api"
+//
+//        };
+//        CommandRequest commandRequest = new CommandRequest(newArgs);
 
-        };
-        CommandRequest commandRequest = new CommandRequest(newArgs);
-
-//            CommandRequest commandRequest = new CommandRequest(args);
+            CommandRequest commandRequest = new CommandRequest(args);
             Command inputCommand = commandRequest.getCommand();
             BaseExecutor executor;
 
